@@ -365,6 +365,7 @@ section[hidden],.next[hidden]{display:none}
 .word{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) 40px;gap:4px 14px;padding:10px 0;border-bottom:1px solid var(--faint);align-items:center}
 .word .wj{font-family:var(--f-jp);font-weight:500;font-size:calc(var(--u)*1.35);line-height:1.9}
 .word .wj rt{font-size:.45em;color:var(--stone)}
+.word .wl{display:grid;gap:0;min-width:0;align-content:center}
 .word .wd{display:grid;gap:0;min-width:0}
 .word .wr{color:var(--stone);font-size:12px}
 .word .play{width:40px;height:40px;font:inherit;border:1px solid var(--ink);background:none;color:var(--ink);cursor:pointer}
@@ -2078,7 +2079,7 @@ a.crow:hover .cn,a.crow:hover .ca,a.crow:focus-visible .cn,a.crow:focus-visible 
         const head=`<div class="uhead"><span class="stone">unit ${cur+1} of ${U.length}</span><span class="ut">${u.t}</span></div>`;
         if(!u.s){box.innerHTML=head+`<div class="empty"><span class="k">being written</span><p>grammar: ${u.g}</p></div>`;return}
         if(mode==='v'){const got=u.v.filter(w=>(boxes[w.id]||0)>0).length;
-          box.innerHTML=head+'<div class="fcbox"></div>'+sws(testing,`${got} / ${u.v.length}`,'words')+`<ol class="words">${u.v.map((w,i)=>`<li class="word" data-id="${w.id}"><span class="wj" lang="ja">${rub(w)}</span><span class="wd"><span class="wr rmj">${w.ro}</span><span class="ans">${w.m}${w.ex?`<span class="wex"><span class="kx" lang="ja">${html(w.ex)}</span><span>${w.exe}</span></span>`:''}</span></span><button type="button" class="play" aria-label="play word" data-say="${(w.r||w.d).replace(/[〜…\s]/g,'')}">▶</button><div class="tbtn"><button type="button" data-a="again">again</button><button type="button" class="g" data-a="got">got it</button></div></li>`).join('')}</ol>`;
+          box.innerHTML=head+'<div class="fcbox"></div>'+sws(testing,`${got} / ${u.v.length}`,'words')+`<ol class="words">${u.v.map((w,i)=>`<li class="word" data-id="${w.id}"><span class="wl"><span class="wj" lang="ja">${rub(w)}</span><span class="wr rmj">${w.ro}</span></span><span class="wd"><span class="ans">${w.m}${w.ex?`<span class="wex"><span class="kx" lang="ja">${html(w.ex)}</span><span>${w.exe}</span></span>`:''}</span></span><button type="button" class="play" aria-label="play word" data-say="${(w.r||w.d).replace(/[〜…\s]/g,'')}">▶</button><div class="tbtn"><button type="button" data-a="again">again</button><button type="button" class="g" data-a="got">got it</button></div></li>`).join('')}</ol>`;
           box.querySelector('.words').onclick=e=>{const li=e.target.closest('.word');if(!li)return;
             const pb=e.target.closest('.play');if(pb){say(pb.dataset.say);return}
             const a=e.target.closest('[data-a]');if(a){mark(li.dataset.id,a.dataset.a);return}
