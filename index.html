@@ -62,7 +62,7 @@ a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offs
 .idxt{font:inherit;color:inherit;background:none;border:0;padding:0;width:100%;display:flex;justify-content:space-between;align-items:center;min-height:44px;cursor:pointer;text-align:left}
 .idxt .cp{font-weight:400;color:var(--ink)}
 .idxt .ix{font-weight:400;display:inline-block;width:1em;text-align:center}
-.index.closed .groups{display:none}
+@media (min-width:960px){.index.closed .groups{display:none}}
 .index.closed{padding-bottom:0;border-bottom:1px solid var(--ink)}
 @media (max-width:959px){.grp li{padding-block:0}.grp li a{padding-block:11px}.grp .gl{margin-bottom:0}.door.follow .links a{display:inline-flex;align-items:center;min-height:44px;padding-block:0}.door.follow .links{gap:0 18px}.next a{display:inline-flex;align-items:center;min-height:44px}}
 @media (min-width:960px){.idxt{cursor:default;pointer-events:none;min-height:0}.idxt .ix{display:none}}
@@ -475,6 +475,101 @@ a.crow:hover .cn,a.crow:hover .ca,a.crow:focus-visible .cn,a.crow:focus-visible 
 .end{background:#1F1F1F;color:#F5F4F0;padding-block:48px 56px;padding-inline:var(--gut);display:grid}
 .end .wm{font-size:var(--hook)}
 .end small{font-size:var(--u);color:var(--stone)}
+
+/* button motion: built from the vault motion tokens (beat 550ms, stamp 160ms, blink 530ms) */
+:root{--ease:cubic-bezier(.2,.7,.2,1)}
+.btn,.tabs button,.rtog,.kbtns button,a.crow,.door.learn{
+  background-image:linear-gradient(var(--lime),var(--lime));background-repeat:no-repeat;background-position:0 50%;background-size:0 100%;
+  transition:background-size 320ms var(--ease),color 160ms,transform 160ms var(--ease)}
+.tabs button[aria-selected="true"]{background-image:none}
+.door.learn{background-color:var(--lime);background-image:none}
+.door .go,.crow .ca{display:inline-block;transition:transform 320ms var(--ease)}
+.crow .ca{display:flex}
+.door.learn .big::after{content:"_";opacity:0}
+.door.follow .links a{
+  background-image:linear-gradient(var(--lime),var(--lime));background-repeat:no-repeat;background-position:0 100%;background-size:0 1px;background-origin:border-box;
+  transition:background-size 320ms var(--ease)}
+.tapr{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border:1.5px solid currentColor;border-radius:50%;pointer-events:none;animation:tapr 550ms var(--ease) forwards}
+@keyframes tapr{from{transform:scale(1);opacity:.9}to{transform:scale(16);opacity:0}}
+.rp{position:relative;overflow:hidden}
+@media (hover:hover){
+  .btn:hover,.tabs button:not([aria-selected="true"]):hover,.rtog:hover,.kbtns button:not(:disabled):hover{background-size:100% 100%;color:#1F1F1F}
+  a.crow:hover,a.crow:focus-visible{background-color:transparent;background-image:linear-gradient(var(--lime),var(--lime));background-size:100% 100%}
+  .door:hover .go,a.crow:hover .ca{transform:translateX(5px)}
+  .door.learn:hover .big,.door.learn:focus-visible .big{text-decoration:none}
+  .door.learn:hover .big::after,.door.learn:focus-visible .big::after{opacity:1;animation:blink 1.06s steps(1) infinite}
+  .door.follow .links a:hover{background-size:100% 1px}
+}
+.btn:active,.tabs button:active,.rtog:active,.kbtns button:not(:disabled):active{transform:scale(.97);background-size:100% 100%;color:#1F1F1F;transition-duration:160ms}
+.door:active{transform:scale(.99)}
+a.crow:active{background-size:100% 100%;background-image:linear-gradient(var(--lime),var(--lime));background-color:transparent;color:#1F1F1F}
+a.crow:active .cn,a.crow:active .ca{color:#1F1F1F}
+@media (prefers-reduced-motion:reduce){
+  .btn,.tabs button,.rtog,.kbtns button,a.crow,.door,.door .go,.crow .ca,.next a,.door.follow .links a{transition:none}
+  .btn:active,.tabs button:active,.rtog:active,.kbtns button:active,.door:active{transform:none}
+  .tapr{display:none}.door.learn:hover .big::after{animation:none}
+}
+
+/* more motion: index slide, expanding doors, page fades, scroll reveals, lists, flashcards */
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+@keyframes fade{from{opacity:0}}
+@keyframes spin{from{transform:rotate(-90deg)}}
+@keyframes fback{from{opacity:0;transform:translateY(-10px)}}
+@keyframes cnext{from{opacity:0;transform:translateX(28px)}}
+@media (max-width:959px){
+  .index .groups{transition:max-height 420ms var(--ease),opacity 320ms,visibility 0s}
+  .index.closed .groups{display:flex;max-height:0!important;opacity:0;visibility:hidden;padding:0;transition:max-height 420ms var(--ease),opacity 200ms,visibility 0s 420ms}
+}
+.ix.spin{animation:spin 320ms var(--ease)}
+.index .grp{animation:rise 420ms var(--ease) backwards}
+.index .grp:nth-child(2){animation-delay:60ms}.index .grp:nth-child(3){animation-delay:120ms}.index .grp:nth-child(4){animation-delay:180ms}
+.index.closed .grp{animation:none}
+.grp li a{transition:transform 320ms var(--ease)}
+.grp li a .t{background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-position:0 100%;background-size:0 1px;transition:background-size 320ms var(--ease)}
+@media (hover:hover){
+  .grp li a:hover{transform:translateX(4px)}
+  .grp li a:hover .t{text-decoration:none;background-size:100% 1px}
+}
+@media (min-width:640px){
+  .doors{transition:grid-template-columns 520ms var(--ease)}
+  .doors:has(.door.learn:hover),.doors:has(.door.learn:focus-visible){grid-template-columns:minmax(0,1.7fr) minmax(0,.8fr)}
+  .doors:has(.door.follow:hover),.doors:has(.door.follow:focus-within){grid-template-columns:minmax(0,.8fr) minmax(0,1.7fr)}
+}
+article.page:not([hidden]),section[data-sub]:not([hidden]){animation:fade 320ms ease-out backwards}
+.rv{opacity:0}
+.rv.in{opacity:1;animation:rise 550ms var(--ease) backwards}
+.word,.sent{transition:background-color 160ms,padding-left 320ms var(--ease)}
+.word .ans,.sent .ans{transition:filter 320ms var(--ease)}
+.word .play,.sent .play,.word .tbtn button{transition:background-color 160ms,transform 160ms var(--ease)}
+.word .play:active,.sent .play:active,.word .tbtn button:active{transform:scale(.94)}
+@media (hover:hover){
+  .word:hover,.sent:hover{background-color:rgba(235,255,121,.3);padding-left:8px}
+  .fcard{transition:transform 200ms var(--ease)}
+  .fcard:hover{transform:translateY(-3px)}
+}
+.fcard:active{transform:scale(.985)}
+.fcard.a-flip .fback{animation:fback 360ms var(--ease) backwards}
+.fcard.a-next{animation:cnext 320ms var(--ease) backwards}
+.tabs button{transition:background-size 320ms var(--ease),background-color 200ms,color 160ms,transform 160ms var(--ease)}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1}.rv.in,.index .grp,article.page,section[data-sub],.fcard.a-next,.fcard.a-flip .fback,.ix.spin{animation:none}
+  .index .groups,.index.closed .groups,.doors,.grp li a,.word,.sent{transition:none}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+
+/* previous / next: the two boxes trade width like the doors, with a lime wipe from their own edge */
+.next{transition:grid-template-columns 520ms var(--ease)}
+.next > span:has(a){background-image:linear-gradient(#EBFF79,#EBFF79);background-repeat:no-repeat;background-size:0 100%;background-position:0 0;transition:background-size 320ms var(--ease),color 160ms}
+.next > span + span:has(a){background-position:100% 0}
+.next > span:has(a):active{background-color:transparent;background-image:linear-gradient(#EBFF79,#EBFF79);background-size:100% 100%;color:#1F1F1F}
+.next > span:has(a):active a{color:#1F1F1F}
+@media (hover:hover){
+  .next > span:has(a):hover,.next > span:has(a:focus-visible){background-color:transparent;background-image:linear-gradient(#EBFF79,#EBFF79);background-size:100% 100%}
+  .next:has(> span:first-child > a:hover),.next:has(> span:first-child > a:focus-visible){grid-template-columns:minmax(0,1.7fr) minmax(0,.8fr)}
+  .next:has(> span:last-child > a:hover),.next:has(> span:last-child > a:focus-visible){grid-template-columns:minmax(0,.8fr) minmax(0,1.7fr)}
+}
+@media (prefers-reduced-motion:reduce){.next,.next > span:has(a){transition:none}}
 </style>
 </head>
 <body>
@@ -1499,10 +1594,18 @@ a.crow:hover .cn,a.crow:hover .ca,a.crow:focus-visible .cn,a.crow:focus-visible 
   // index: closed on phones so the headline comes first, one tap to open
   (function(){const nav=document.querySelector('nav.index'),bt=nav&&nav.querySelector('.idxt');if(!bt)return;
     const mob=()=>matchMedia('(max-width:959px)').matches;
-    function set(open){nav.classList.toggle('closed',!open);bt.setAttribute('aria-expanded',open);bt.querySelector('.ix').textContent=open?'-':'+'}
+    const g=nav.querySelector('.groups'),ixe=bt.querySelector('.ix');
+    function set(open,anim){nav.classList.toggle('closed',!open);bt.setAttribute('aria-expanded',open);ixe.textContent=open?'-':'+'}
+    function slide(open){
+      const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(rm||!g){set(open);return}
+      clearTimeout(slide.t);g.style.maxHeight=g.scrollHeight+'px';void g.offsetHeight;
+      ixe.classList.remove('spin');void ixe.offsetWidth;ixe.classList.add('spin');
+      set(open);
+      if(open)slide.t=setTimeout(()=>{g.style.maxHeight=''},460)}
     set(!mob());
-    bt.addEventListener('click',()=>{if(mob())set(nav.classList.contains('closed'))});
-    nav.addEventListener('click',e=>{if(mob()&&e.target.closest('.groups a'))set(false)});
+    bt.addEventListener('click',()=>{if(mob())slide(nav.classList.contains('closed'))});
+    nav.addEventListener('click',e=>{if(mob()&&e.target.closest('.groups a'))slide(false)});
     matchMedia('(max-width:959px)').addEventListener('change',()=>set(!mob()))})();
 
   // opening intro: once per visit, short, tap to skip, and never on a deep link or with reduced motion
@@ -2093,12 +2196,13 @@ a.crow:hover .cn,a.crow:hover .ca,a.crow:focus-visible .cn,a.crow:focus-visible 
           card=`<div class="card fcard" data-f="show" role="button" tabindex="0" aria-label="flip card">${front}<div class="fback"${shown?'':' hidden'}>${back}</div>${shown?'':'<span class="fhint">tap to flip</span>'}</div>
             <div class="kbtns fbt"><button type="button" class="b-ink" data-f="show" data-say="${sp}">${shown?'play':'show'}</button><button type="button" data-f="again"${shown?'':' disabled'}>again</button><button type="button" class="b-lime" data-f="got"${shown?'':' disabled'}>got it</button></div>`}
         host.innerHTML=`<div class="fwrap"><div class="sbar"><span class="k">flashcards</span><span class="stone">${got} / ${items.length}</span></div><p class="stone fleft">${deck.length?`left this round: ${deck.length} of ${items.length}. "again" brings a card back a few cards later.`:''}</p>${card}</div>`;
-        const go=f=>{if(f!=='show')hush();const y=scrollY;const id=deck.length?items[deck[0]].id:null;
+        const go=f=>{window.__fa=(f==='show'&&!shown)?'flip':(f==='got'||f==='again')?'next':'';if(f!=='show')hush();const y=scrollY;const id=deck.length?items[deck[0]].id:null;
           if(f==='show'){if(!shown){shown=true}const b=host.querySelector('[data-say]');if(b)say(b.dataset.say)}
           else if(f==='again'){boxes[id]=0;store.set(L.bx,boxes);const c=deck.shift();deck.splice(Math.min(3,deck.length),0,c);shown=false}
           else if(f==='got'){boxes[id]=(boxes[id]||0)+1;store.set(L.bx,boxes);deck.shift();shown=false}
           else if(f==='re'){fk=''}
           draw();scrollTo(0,y)};
+        {const fc=host.querySelector('.fcard');if(fc&&window.__fa)fc.classList.add('a-'+window.__fa);window.__fa=''}
         host.querySelector('.fwrap').onclick=e=>{const b=e.target.closest('[data-f]');if(b&&!b.disabled)go(b.dataset.f)};
         host.querySelector('.fwrap').onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('fcard')){e.preventDefault();go('show')}};
         }
@@ -2171,6 +2275,35 @@ a.crow:hover .cn,a.crow:hover .ca,a.crow:focus-visible .cn,a.crow:focus-visible 
 
   size();show();
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{size();draw(performance.now()/1000)});
+})();
+</script>
+
+<script>
+/* tap ring: one ring from the touch point, 550ms ease-out; skipped for reduced motion */
+(function(){
+  const SEL='.btn,a.crow,.door,.tabs button,.kbtns button,.rtog,.next>span:has(a),.fcard';
+  const rm=matchMedia('(prefers-reduced-motion: reduce)');
+  document.addEventListener('pointerdown',e=>{
+    if(rm.matches)return;
+    const t=e.target.closest&&e.target.closest(SEL);
+    if(!t||t.disabled)return;
+    const r=t.getBoundingClientRect(),d=document.createElement('span');
+    d.className='tapr';d.style.left=(e.clientX-r.left)+'px';d.style.top=(e.clientY-r.top)+'px';
+    t.classList.add('rp');t.appendChild(d);
+    const done=()=>{d.remove();if(!t.querySelector('.tapr'))t.classList.remove('rp')};d.addEventListener('animationend',done);setTimeout(done,800);
+  },{passive:true});
+})();
+</script>
+<script>
+/* scroll reveal: things rise once as they come into view */
+(function(){
+  if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const els=[...document.querySelectorAll('.sh,.steps li,.dl,.tclock,.crow,.tricky,.subnav,.pagehead,.card:not(.fcard)')];
+  let n=0,t=0;
+  const io=new IntersectionObserver(es=>{
+    es.filter(e=>e.isIntersecting).forEach((e,i)=>{const x=e.target;x.style.animationDelay=Math.min(i,5)*70+'ms';x.classList.add('in');io.unobserve(x)})
+  },{rootMargin:'0px 0px -8% 0px',threshold:.05});
+  els.forEach(x=>{x.classList.add('rv');io.observe(x)});
 })();
 </script>
 
