@@ -570,6 +570,40 @@ article.page:not([hidden]),section[data-sub]:not([hidden]){animation:fade 320ms 
   .next:has(> span:last-child > a:hover),.next:has(> span:last-child > a:focus-visible){grid-template-columns:minmax(0,.8fr) minmax(0,1.7fr)}
 }
 @media (prefers-reduced-motion:reduce){.next,.next > span:has(a){transition:none}}
+
+/* third pass: count-ups, journey path drawn by scroll, sliding tab pill, headline rise and lime sweep */
+.jm .jd,.jm text,.jhs{transform-box:fill-box;transform-origin:center;transition:transform 320ms var(--ease),opacity 320ms}
+.jm:not(.on) .jd{transform:scale(.3)}
+.jm:not(.on) text{opacity:0;transform:translateX(-8px)}
+.jh:not(.on) .jhs{opacity:0;transform:scale(1.6)}
+.jh.on .jhs{transition:transform 160ms cubic-bezier(.3,1.4,.5,1),opacity 120ms}
+.jring{transform-box:fill-box;transform-origin:center;opacity:0}
+.jm.on .jring{animation:jring 2400ms var(--ease) 400ms infinite}
+@keyframes jring{0%{transform:scale(1);opacity:.9}50%,100%{transform:scale(2.4);opacity:0}}
+.fprog{height:3px;background:var(--faint);max-width:720px;margin:8px 0 2px}
+.fprog i{display:block;height:100%;background:var(--ink);transition:width 550ms var(--ease)}
+.fgot{display:inline-block}
+.fgot.tick{animation:tick 320ms var(--ease)}
+@keyframes tick{40%{transform:translateY(-4px);color:var(--ink)}}
+.pilled{position:relative;isolation:isolate}
+.pilled > button{position:relative;z-index:1}
+.pilled > button[aria-selected="true"]{background-color:transparent;background-image:none}
+.tpill{position:absolute;left:0;top:0;width:0;height:0;background:var(--ink);z-index:0;pointer-events:none}
+.tpill.go{transition:transform 320ms var(--ease),width 320ms var(--ease),height 320ms var(--ease)}
+h1 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.12em;margin-bottom:-.12em}
+h1 .w > span{display:inline-block}
+article.page:not([hidden]) h1 .w > span{animation:wordup 550ms var(--ease) backwards;animation-delay:calc(var(--i) * 45ms)}
+@keyframes wordup{from{transform:translateY(105%)}}
+article.page:not([hidden]) h1 .hl{background-repeat:no-repeat;animation:hlsweep 550ms var(--ease) backwards;animation-delay:calc(var(--n) * 45ms + 280ms)}
+@keyframes hlsweep{from{background-size:0% 100%}to{background-size:100% 100%}}
+.km{background-repeat:no-repeat;background-image:linear-gradient(var(--lime),var(--lime));background-color:transparent}
+.rv .km,.km.rv{background-size:0% 100%}
+.in .km,.km.in{animation:hlsweep 550ms var(--ease) 200ms backwards;background-size:100% 100%}
+@media (prefers-reduced-motion:reduce){
+  .jm .jd,.jm text,.jhs{transition:none}.jm.on .jring{animation:none}
+  .fprog i,.tpill.go{transition:none}.fgot.tick{animation:none}
+  article.page h1 .w > span,article.page h1 .hl,.in .km,.km.in{animation:none}
+}
 </style>
 </head>
 <body>
@@ -1500,13 +1534,24 @@ article.page:not([hidden]),section[data-sub]:not([hidden]){animation:fade 320ms 
     const x=40,y0=36,gap=78;let h='';const ni=M.findIndex(m=>m[3]==='now');
     for(let i=0;i<M.length-1;i++){const dash=i>=ni?'stroke-dasharray="7 6"':'';h+=`<line x1="${x}" y1="${y0+i*gap+14}" x2="${x}" y2="${y0+(i+1)*gap-14}" stroke="${I}" stroke-width="1.6" ${dash}/>`}
     M.forEach(([en,jp,d,st],i)=>{const y=y0+i*gap;
-      h+= st==='done'?`<circle cx="${x}" cy="${y}" r="10" fill="${I}"/>`: st==='now'?`<circle cx="${x}" cy="${y}" r="13" fill="${L}" stroke="${I}" stroke-width="1.6"/>`:`<circle cx="${x}" cy="${y}" r="10" fill="${P}" stroke="${I}" stroke-width="1.6"/>`;
+      h+=`<g class="jm" data-y="${y}">`;
+      if(st==='now')h+=`<circle class="jring" cx="${x}" cy="${y}" r="13" fill="none" stroke="${L}" stroke-width="2"/>`;
+      h+= st==='done'?`<circle class="jd" cx="${x}" cy="${y}" r="10" fill="${I}"/>`: st==='now'?`<circle class="jd" cx="${x}" cy="${y}" r="13" fill="${L}" stroke="${I}" stroke-width="1.6"/>`:`<circle class="jd" cx="${x}" cy="${y}" r="10" fill="${P}" stroke="${I}" stroke-width="1.6"/>`;
       h+=`<text x="${x+32}" y="${y-4}" font-size="16" style="fill:${I};font-family:Inter,Helvetica,Arial,sans-serif;font-weight:600;letter-spacing:-.2px">${en}</text>`;
-      h+=`<text x="${x+32}" y="${y+18}" font-size="13" style="fill:${SP}"><tspan style="font-family:'M PLUS 1 Code','Noto Sans JP',monospace">${jp}</tspan> · ${d}</text>`});
+      h+=`<text x="${x+32}" y="${y+18}" font-size="13" style="fill:${SP}"><tspan style="font-family:'M PLUS 1 Code','Noto Sans JP',monospace">${jp}</tspan> · ${d}</text></g>`});
     // a real hanko for a real pass
-    [1,2].forEach(k=>{h+=`<g transform="rotate(-12 340 ${y0+gap*k})"><circle cx="340" cy="${y0+gap*k}" r="24" fill="none" stroke="${R}" stroke-width="2"/><text x="340" y="${y0+gap*k}" font-size="15" text-anchor="middle" dominant-baseline="central" style="font-family:'Noto Sans JP',sans-serif;fill:${R}">合格</text></g>`});
+    [1,2].forEach(k=>{h+=`<g class="jm jh" data-y="${y0+gap*k}"><g transform="rotate(-12 340 ${y0+gap*k})"><g class="jhs"><circle cx="340" cy="${y0+gap*k}" r="24" fill="none" stroke="${R}" stroke-width="2"/><text x="340" y="${y0+gap*k}" font-size="15" text-anchor="middle" dominant-baseline="central" style="font-family:'Noto Sans JP',sans-serif;fill:${R}">合格</text></g></g></g>`});
     h+=`<text x="${x-14}" y="${y0+6*gap+52}" font-size="13" style="fill:${SP}">filled = done · lime = now · outline = ahead</text>`;
-    document.getElementById('path').innerHTML=h})();
+    const sv=document.getElementById('path');
+    sv.innerHTML=`<defs><clipPath id="jclip"><rect x="-20" y="0" width="460" height="578"/></clipPath></defs><g clip-path="url(#jclip)">${h}</g>`;
+    // draw the path with the scroll: the walked part follows your thumb, milestones pop as the line reaches them
+    const cr=sv.querySelector('#jclip rect'),ms=[...sv.querySelectorAll('.jm')];
+    const rm=matchMedia('(prefers-reduced-motion: reduce)');
+    function step(){if(!sv.getBoundingClientRect().height)return;
+      let p=1;if(!rm.matches){const r=sv.getBoundingClientRect(),vh=innerHeight;p=Math.max(0,Math.min(1,(vh*.85-r.top)/(r.height*.8)))}
+      const yy=578*p;cr.setAttribute('height',yy+20);ms.forEach(m=>m.classList.toggle('on',+m.dataset.y<=yy-4))}
+    let raf=0;const req=()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;step()})};
+    addEventListener('scroll',req,{passive:true});addEventListener('resize',req);addEventListener('hashchange',()=>setTimeout(step,60));step()})();
 
   // page router: plain #p01 style anchors, page 01 by default
   const pages=[...document.querySelectorAll('article.page')];
@@ -2195,14 +2240,16 @@ article.page:not([hidden]),section[data-sub]:not([hidden]){animation:fade 320ms 
             back=`<span class="fm">${x[2]}</span><span class="fe"><span lang="ja">${x[3]}</span> · ${x[4]}</span>`}
           card=`<div class="card fcard" data-f="show" role="button" tabindex="0" aria-label="flip card">${front}<div class="fback"${shown?'':' hidden'}>${back}</div>${shown?'':'<span class="fhint">tap to flip</span>'}</div>
             <div class="kbtns fbt"><button type="button" class="b-ink" data-f="show" data-say="${sp}">${shown?'play':'show'}</button><button type="button" data-f="again"${shown?'':' disabled'}>again</button><button type="button" class="b-lime" data-f="got"${shown?'':' disabled'}>got it</button></div>`}
-        host.innerHTML=`<div class="fwrap"><div class="sbar"><span class="k">flashcards</span><span class="stone">${got} / ${items.length}</span></div><p class="stone fleft">${deck.length?`left this round: ${deck.length} of ${items.length}. "again" brings a card back a few cards later.`:''}</p>${card}</div>`;
+        const fpk=L.bx+':'+fk,fprev=(window.__fp||(window.__fp={}))[fpk];window.__fp[fpk]=got;const p0=fprev===undefined?got:fprev;
+        host.innerHTML=`<div class="fwrap"><div class="sbar"><span class="k">flashcards</span><span class="stone fgot${got>p0?' tick':''}">${got} / ${items.length}</span></div><div class="fprog"><i style="width:${items.length?p0/items.length*100:0}%"></i></div><p class="stone fleft">${deck.length?`left this round: ${deck.length} of ${items.length}. "again" brings a card back a few cards later.`:''}</p>${card}</div>`;
         const go=f=>{window.__fa=(f==='show'&&!shown)?'flip':(f==='got'||f==='again')?'next':'';if(f!=='show')hush();const y=scrollY;const id=deck.length?items[deck[0]].id:null;
           if(f==='show'){if(!shown){shown=true}const b=host.querySelector('[data-say]');if(b)say(b.dataset.say)}
           else if(f==='again'){boxes[id]=0;store.set(L.bx,boxes);const c=deck.shift();deck.splice(Math.min(3,deck.length),0,c);shown=false}
           else if(f==='got'){boxes[id]=(boxes[id]||0)+1;store.set(L.bx,boxes);deck.shift();shown=false}
           else if(f==='re'){fk=''}
           draw();scrollTo(0,y)};
-        {const fc=host.querySelector('.fcard');if(fc&&window.__fa)fc.classList.add('a-'+window.__fa);window.__fa=''}
+        {const fc=host.querySelector('.fcard');if(fc&&window.__fa)fc.classList.add('a-'+window.__fa);window.__fa='';
+          const bi=host.querySelector('.fprog i');if(bi){void bi.offsetWidth;bi.style.width=(items.length?got/items.length*100:0)+'%'}}
         host.querySelector('.fwrap').onclick=e=>{const b=e.target.closest('[data-f]');if(b&&!b.disabled)go(b.dataset.f)};
         host.querySelector('.fwrap').onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('fcard')){e.preventDefault();go('show')}};
         }
@@ -2298,12 +2345,45 @@ article.page:not([hidden]),section[data-sub]:not([hidden]){animation:fade 320ms 
 /* scroll reveal: things rise once as they come into view */
 (function(){
   if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  const els=[...document.querySelectorAll('.sh,.steps li,.dl,.tclock,.crow,.tricky,.subnav,.pagehead,.card:not(.fcard)')];
+  const els=[...document.querySelectorAll('.sh,.steps li,.dl,.tclock,.crow,.tricky,.subnav,.pagehead,.card:not(.fcard),.km')];
   let n=0,t=0;
   const io=new IntersectionObserver(es=>{
     es.filter(e=>e.isIntersecting).forEach((e,i)=>{const x=e.target;x.style.animationDelay=Math.min(i,5)*70+'ms';x.classList.add('in');io.unobserve(x)})
   },{rootMargin:'0px 0px -8% 0px',threshold:.05});
   els.forEach(x=>{x.classList.add('rv');io.observe(x)});
+})();
+</script>
+<script>
+/* count-ups: real numbers count from 0 with the ring timing, 1200ms ease-out, once each */
+(function(){
+  const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els=[...document.querySelectorAll('#p01 .js-days')];
+  if(rm||!('IntersectionObserver' in window))return;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;io.unobserve(el);
+    const end=parseInt(el.textContent,10);if(!(end>0))return;const t0=performance.now(),D=1200;
+    const f=t=>{const k=Math.min(1,(t-t0)/D),v=Math.round(end*(1-Math.pow(1-k,3)));el.textContent=v;if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}),{threshold:.6});
+  els.forEach(el=>io.observe(el));
+})();
+/* sliding pill: the ink block slides to the chosen tab or unit instead of jumping */
+(function(){
+  if(!window.ResizeObserver)return;
+  function setup(bar){if(bar.__pill)return;const pill=document.createElement('i');pill.className='tpill';pill.setAttribute('aria-hidden','true');
+    bar.prepend(pill);bar.classList.add('pilled');bar.__pill=pill;
+    const place=()=>{if(pill.parentNode!==bar)bar.prepend(pill);const b=bar.querySelector(':scope > button[aria-selected="true"]');if(!b||!bar.offsetWidth){pill.style.width='0';return}
+      pill.style.transform=`translate(${b.offsetLeft}px,${b.offsetTop}px)`;pill.style.width=b.offsetWidth+'px';pill.style.height=b.offsetHeight+'px';
+      if(!pill.classList.contains('go'))requestAnimationFrame(()=>requestAnimationFrame(()=>pill.classList.add('go')))};
+    new MutationObserver(place).observe(bar,{subtree:true,childList:true,attributes:true,attributeFilter:['aria-selected']});
+    new ResizeObserver(()=>{pill.classList.remove('go');place()}).observe(bar);place()}
+  document.querySelectorAll('.tabs,.units').forEach(setup);
+})();
+/* headline words rise from behind a line, then the lime box sweeps in */
+(function(){
+  document.querySelectorAll('article.page h1').forEach(h=>{let i=0;
+    const wrap=t=>{const sp=document.createElement('span');sp.className='w';const inn=document.createElement('span');inn.style.setProperty('--i',i++);inn.textContent=t;sp.appendChild(inn);return sp};
+    [...h.childNodes].forEach(n=>{
+      if(n.nodeType===3){const parts=n.textContent.split(/(\s+)/);const fr=document.createDocumentFragment();parts.forEach(x=>{if(!x)return;fr.appendChild(/^\s+$/.test(x)?document.createTextNode(x):wrap(x))});h.replaceChild(fr,n)}
+      else if(n.classList&&n.classList.contains('hl')){n.style.setProperty('--n',i);const sp=document.createElement('span');sp.className='w';const inn=document.createElement('span');inn.style.setProperty('--i',i++);n.replaceWith(sp);inn.appendChild(n);sp.appendChild(inn)}});
+  });
 })();
 </script>
 
