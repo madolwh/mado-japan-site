@@ -604,6 +604,13 @@ article.page:not([hidden]) h1 .hl{background-repeat:no-repeat;animation:hlsweep 
   .fprog i,.tpill.go{transition:none}.fgot.tick{animation:none}
   article.page h1 .w > span,article.page h1 .hl,.in .km,.km.in{animation:none}
 }
+
+/* mobile: the index bar stays pinned at the top while you scroll */
+@media (max-width:959px){
+  .index{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--paper);margin-inline:calc(var(--gut) * -1);padding-inline:var(--gut)}
+  .index:not(.closed) .groups{max-height:calc(100dvh - 120px);overflow-y:auto;overscroll-behavior:contain}
+  html{scroll-padding-top:64px}
+}
 </style>
 </head>
 <body>
@@ -1644,13 +1651,14 @@ article.page:not([hidden]) h1 .hl{background-repeat:no-repeat;animation:hlsweep 
     function slide(open){
       const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
       if(rm||!g){set(open);return}
-      clearTimeout(slide.t);g.style.maxHeight=g.scrollHeight+'px';void g.offsetHeight;
+      clearTimeout(slide.t);const cap=Math.max(160,innerHeight-120);g.style.maxHeight=(open?Math.min(g.scrollHeight,cap):Math.min(g.getBoundingClientRect().height,cap))+'px';void g.offsetHeight;
       ixe.classList.remove('spin');void ixe.offsetWidth;ixe.classList.add('spin');
       set(open);
       if(open)slide.t=setTimeout(()=>{g.style.maxHeight=''},460)}
     set(!mob());
     bt.addEventListener('click',()=>{if(mob())slide(nav.classList.contains('closed'))});
     nav.addEventListener('click',e=>{if(mob()&&e.target.closest('.groups a'))slide(false)});
+    document.addEventListener('click',e=>{if(mob()&&!nav.classList.contains('closed')&&!nav.contains(e.target))slide(false)});
     matchMedia('(max-width:959px)').addEventListener('change',()=>set(!mob()))})();
 
   // opening intro: once per visit, short, tap to skip, and never on a deep link or with reduced motion
