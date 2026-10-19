@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>mado_japan | my public journey</title>
 <meta name="description" content="my journey to Tama Art University, and a free JLPT library from N5 to N1: vocabulary, grammar, reading and ready checks.">
-<meta name="theme-color" content="#1F1F1F">
+<meta name="theme-color" content="#000000">
 <meta property="og:title" content="mado_japan">
 <meta property="og:description" content="my public journey to Tama Art University, plus free JLPT N5 to N1 study material.">
 <meta property="og:type" content="website">
@@ -617,6 +617,16 @@ article.page:not([hidden]) h1 .hl{background-repeat:no-repeat;animation:hlsweep 
 body.home .hero{display:block}
 .hero canvas,.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .hero [hidden]{display:none}
+.hero.has-video .hcap{display:none}
+.hsnd{position:absolute;left:var(--gut);bottom:18px;z-index:3;display:flex;align-items:center;gap:10px;background:none;border:0;padding:6px 0;color:#FFFFFF;font:inherit;font-size:13px;cursor:pointer;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.hsnd .hsi{display:flex;align-items:flex-end;gap:3px;height:14px}
+.hsnd .hsi i{display:block;width:3px;height:4px;background:currentColor;transition:height .2s var(--ease)}
+.hsnd.on .hsi i{animation:hsb .9s var(--ease) infinite alternate}
+.hsnd.on .hsi i:nth-child(2){animation-delay:.15s}.hsnd.on .hsi i:nth-child(3){animation-delay:.3s}
+@keyframes hsb{from{height:4px}to{height:14px}}
+@media (hover:hover){.hsnd:hover{color:var(--lime)}}
+.hsnd:focus-visible{outline:2px solid var(--lime);outline-offset:4px}
+@media (prefers-reduced-motion:reduce){.hsnd.on .hsi i{animation:none;height:10px}}
 .hcap{position:absolute;left:var(--gut);right:var(--gut);bottom:18px;display:flex;justify-content:space-between;gap:12px;color:var(--paper);font-size:12px;z-index:2}
 .hcap .js-tag{color:var(--lime)}
 .hscroll{position:absolute;right:var(--gut);bottom:48px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--paper);font-size:12px;z-index:2}
@@ -706,7 +716,8 @@ body{background-image:none!important;background-color:#FFFFFF}
 
 <div class="hero" id="hero" aria-label="opening motion graphic">
   <canvas aria-hidden="true"></canvas>
-  <video class="hv" muted loop playsinline preload="auto" hidden aria-hidden="true"></video>
+  <video class="hv" muted loop playsinline preload="auto" poster="hero.jpg" hidden aria-hidden="true"></video>
+  <button class="hsnd" type="button" hidden aria-pressed="false"><span class="hsi" aria-hidden="true"><i></i><i></i><i></i></span><span class="hst">sound off</span></button>
   <div class="hcap"><span>my public journey<span class="cur" aria-hidden="true">_</span></span></div>
   <div class="hscroll" aria-hidden="true"><span>scroll</span><i></i></div>
 </div>
@@ -2482,10 +2493,18 @@ body{background-image:none!important;background-color:#FFFFFF}
 <script>
 /* hero: a motion graphic in the video slot. to use a real video, put its file or link in HERO_VIDEO */
 (function(){
-  const HERO_VIDEO='';
+  const HERO_VIDEO='hero.mp4';
   const box=document.querySelector('.hero');if(!box)return;
   const cv=box.querySelector('canvas'),vd=box.querySelector('video');
-  if(HERO_VIDEO){vd.src=HERO_VIDEO;vd.hidden=false;cv.hidden=true;const pl=()=>vd.play&&vd.play().catch(()=>{});pl();return}
+  if(HERO_VIDEO){vd.src=HERO_VIDEO;vd.hidden=false;cv.hidden=true;box.classList.add('has-video');
+    const rmv=matchMedia('(prefers-reduced-motion: reduce)').matches,sb=box.querySelector('.hsnd'),st=sb.querySelector('.hst');sb.hidden=false;
+    const pl=()=>vd.play&&vd.play().catch(()=>{});
+    const lab=()=>{st.textContent=vd.paused?'play':(vd.muted?'sound off':'sound on');sb.setAttribute('aria-pressed',String(!vd.muted&&!vd.paused));sb.classList.toggle('on',!vd.muted&&!vd.paused)};
+    sb.addEventListener('click',()=>{if(vd.paused){vd.muted=false;pl()}else vd.muted=!vd.muted;lab()});
+    vd.addEventListener('play',lab);vd.addEventListener('pause',lab);
+    if(!rmv)pl();lab();
+    new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){if(!rmv||!vd.muted)pl()}else vd.pause()}),{threshold:.1}).observe(box);
+    return}
   const x=cv.getContext('2d'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W=0,H=0,cell=16,cols=0,rows=0,mx=.5,my=.5,vis=true,last=0;
   function rs(){const r=box.getBoundingClientRect();if(!r.width)return;const d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0);cell=Math.max(14,Math.round(W/64));cols=Math.ceil(W/cell);rows=Math.ceil(H/cell);draw(performance.now())}
