@@ -455,6 +455,16 @@ section[hidden],.next[hidden]{display:none}
 .dlbtn:disabled{opacity:.5;cursor:default}
 .dlalt{color:var(--lime);text-decoration:none;border-bottom:1px solid var(--lime)}
 .dlst{color:var(--stone);font-size:12px}
+.dlform{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin:0}
+.dlf{flex:1 1 220px;display:flex}
+.dlf input{flex:1;font:inherit;background:transparent;color:#FFFFFF;border:0;border-bottom:1px solid rgba(255,255,255,.5);padding:10px 2px;border-radius:0;outline:none;min-width:0}
+.dlf input::placeholder{color:var(--stone)}
+.dlf input:focus{border-bottom-color:var(--lime)}
+.dlform .dlst{flex-basis:100%;margin:0;background:none!important;padding:0!important}
+.dlform.is-sent .dlf,.dlform.is-sent .dlbtn{display:none}
+.dlform.is-sent .dlst{color:var(--lime);font-size:14px}
+.dlnote{margin:0;color:var(--stone);font-size:12px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* footer: contact me */
 .fin{max-width:1200px;margin-inline:auto;display:grid;gap:22px;width:100%}
 .ftop{display:flex;justify-content:space-between;gap:12px;color:var(--stone);border-bottom:1px solid rgba(255,255,255,.25);padding-bottom:10px}
@@ -972,9 +982,9 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="unit-v"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N5 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N5 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">51 pages · 15 units · 552 words · 180 sentences</p>
-          <div class="dlrow"><button type="button" class="dlbtn">download PDF</button><a class="dlalt" href="n5-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n5" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N5 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -990,9 +1000,9 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="unit-g"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N5 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N5 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">51 pages · 15 units · 552 words · 180 sentences</p>
-          <div class="dlrow"><button type="button" class="dlbtn">download PDF</button><a class="dlalt" href="n5-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n5" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N5 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -1107,10 +1117,10 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="n4-unit-v" class="uview"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N4 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N4 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">51 pages · 15 units · 554 words · 180 sentences</p>
           <p class="dlm">the N4 test includes N5 too, so keep the N5 PDF.</p>
-          <div class="dlrow"><button type="button" class="dlbtn" data-f="n4-vocab-grammar.pdf" data-n="mado_japan N4 vocabulary and grammar.pdf">download PDF</button><a class="dlalt" href="n4-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n4" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N4 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -1122,10 +1132,10 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="n4-unit-g" class="uview"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N4 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N4 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">51 pages · 15 units · 554 words · 180 sentences</p>
           <p class="dlm">the N4 test includes N5 too, so keep the N5 PDF.</p>
-          <div class="dlrow"><button type="button" class="dlbtn" data-f="n4-vocab-grammar.pdf" data-n="mado_japan N4 vocabulary and grammar.pdf">download PDF</button><a class="dlalt" href="n4-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n4" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N4 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -1233,10 +1243,10 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="n3-unit-v" class="uview"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N3 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N3 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">62 pages · 20 units · 633 words · 240 sentences</p>
           <p class="dlm">the N3 test includes N5 and N4 too, so keep those PDFs.</p>
-          <div class="dlrow"><button type="button" class="dlbtn" data-f="n3-vocab-grammar.pdf" data-n="mado_japan N3 vocabulary and grammar.pdf">download PDF</button><a class="dlalt" href="n3-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n3" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N3 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -1248,10 +1258,10 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="n3-unit-g" class="uview"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N3 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N3 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">62 pages · 20 units · 633 words · 240 sentences</p>
           <p class="dlm">the N3 test includes N5 and N4 too, so keep those PDFs.</p>
-          <div class="dlrow"><button type="button" class="dlbtn" data-f="n3-vocab-grammar.pdf" data-n="mado_japan N3 vocabulary and grammar.pdf">download PDF</button><a class="dlalt" href="n3-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n3" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N3 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -1359,10 +1369,10 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="n2-unit-v" class="uview"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N2 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N2 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">66 pages · 20 units · 770 words · 240 sentences</p>
           <p class="dlm">the N2 test includes N5 to N3 too, so keep those PDFs.</p>
-          <div class="dlrow"><button type="button" class="dlbtn" data-f="n2-vocab-grammar.pdf" data-n="mado_japan N2 vocabulary and grammar.pdf">download PDF</button><a class="dlalt" href="n2-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n2" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N2 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -1374,10 +1384,10 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="n2-unit-g" class="uview"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N2 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N2 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">66 pages · 20 units · 770 words · 240 sentences</p>
           <p class="dlm">the N2 test includes N5 to N3 too, so keep those PDFs.</p>
-          <div class="dlrow"><button type="button" class="dlbtn" data-f="n2-vocab-grammar.pdf" data-n="mado_japan N2 vocabulary and grammar.pdf">download PDF</button><a class="dlalt" href="n2-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n2" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N2 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -1483,10 +1493,10 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="n1-unit-v" class="uview"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N1 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N1 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">64 pages · 20 units · 770 words · 240 sentences</p>
           <p class="dlm">the N1 test includes N5 to N2 too, so keep those PDFs.</p>
-          <div class="dlrow"><button type="button" class="dlbtn" data-f="n1-vocab-grammar.pdf" data-n="mado_japan N1 vocabulary and grammar.pdf">download PDF</button><a class="dlalt" href="n1-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n1" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N1 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -1498,10 +1508,10 @@ body{background-image:none!important;background-color:#FFFFFF}
         <div id="n1-unit-g" class="uview"></div>
         <div class="dl">
           <div class="cap"><span>everything in one file:</span><span class="jpm">ダウンロード</span></div>
-          <p class="say2">all N1 vocabulary and grammar, as a PDF</p>
+          <p class="say2">all N1 vocabulary and grammar, as a PDF, sent to your email</p>
           <p class="dlm">64 pages · 20 units · 770 words · 240 sentences</p>
           <p class="dlm">the N1 test includes N5 to N2 too, so keep those PDFs.</p>
-          <div class="dlrow"><button type="button" class="dlbtn" data-f="n1-vocab-grammar.pdf" data-n="mado_japan N1 vocabulary and grammar.pdf">download PDF</button><a class="dlalt" href="n1-vocab-grammar.pdf" target="_blank" rel="noopener" hidden>open the PDF ></a><span class="dlst" aria-live="polite"></span></div>
+          <form class="dlform" data-lv="n1" novalidate><label class="dlf"><span class="vh">your email</span><input type="email" name="email_address" required autocomplete="email" inputmode="email" placeholder="your email"></label><button type="submit" class="dlbtn">send me the N1 PDF</button><p class="dlst" aria-live="polite"></p></form><p class="dlnote">I'll email you the PDF. check your spam folder if it doesn't show up. you'll also join my email list, and you can unsubscribe anytime.</p>
         </div>
       </div>
     </section>
@@ -2452,14 +2462,16 @@ body{background-image:none!important;background-color:#FFFFFF}
   TIMER('n2-',[['vocabulary, grammar and reading',105],['listening',50]]);
   TIMER('n1-',[['vocabulary, grammar and reading',110],['listening',55]]);
 
-  // the N5 PDF: saved through the viewer's download prompt, or opened directly where that isn't available
-  (async function(){let dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){}
-    const alt=()=>{document.querySelectorAll('.dlalt').forEach(a=>a.hidden=false)};
-    if(!dl){document.querySelectorAll('.dlbtn').forEach(b=>b.hidden=true);alt();return}
-    document.querySelectorAll('.dlbtn').forEach(b=>b.onclick=async()=>{const st=b.parentElement.querySelector('.dlst');b.disabled=true;st.textContent='getting it ready…';
-      try{const r=await fetch(b.dataset.f||'n5-vocab-grammar.pdf');if(!r.ok)throw {code:'unavailable'};const blob=await r.blob();await dl.save({filename:b.dataset.n||'mado_japan N5 vocabulary and grammar.pdf',data:blob});st.textContent='saved'}
-      catch(e){const c=e&&e.code;st.textContent=c==='declined'?'':c==='rate_limited'?'a save is already waiting for you':"this view can't save files. open it instead:";if(c&&c!=='declined'&&c!=='rate_limited')alt()}
-      b.disabled=false})})();
+  // PDFs by email: each level is a Kit form that emails its PDF (Kit's incentive email). Fill in the form ids once the forms exist.
+  const KIT_FORMS={n5:'10067579',n4:'10067645',n3:'10067653',n2:'10067656',n1:'10067663'};
+  document.querySelectorAll('.dlform').forEach(f=>f.addEventListener('submit',async e=>{e.preventDefault();
+    const st=f.querySelector('.dlst'),inp=f.querySelector('input'),btn=f.querySelector('button'),v=inp.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){st.textContent='that email looks off. try again?';inp.focus();return}
+    const id=KIT_FORMS[f.dataset.lv];btn.disabled=true;st.textContent='sending…';
+    try{if(id){const fd=new FormData();fd.append('email_address',v);await fetch('https://app.kit.com/forms/'+id+'/subscriptions',{method:'POST',mode:'no-cors',body:fd})}
+      else{st.textContent='this one is not ready yet. DM me on Instagram @mado_japan and I will send it.';btn.disabled=false;return}
+      f.classList.add("is-sent");st.textContent='sent. check your inbox for an email from me. if you do not see it in a minute, look in your spam or promotions folder. tap the button inside to confirm, and the PDF downloads.'}
+    catch(err){st.textContent='something went wrong. try again, or DM me on Instagram.';btn.disabled=false}}));
 
   size();show();
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{size();draw(performance.now()/1000)});
