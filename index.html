@@ -1661,12 +1661,10 @@ article.page:not([hidden]) h1 .hl{background-repeat:no-repeat;animation:hlsweep 
     document.addEventListener('click',e=>{if(mob()&&!nav.classList.contains('closed')&&!nav.contains(e.target))slide(false)});
     matchMedia('(max-width:959px)').addEventListener('change',()=>set(!mob()))})();
 
-  // opening intro: once per visit, short, tap to skip, and never on a deep link or with reduced motion
+  // opening intro: plays every time the landing page is opened fresh, short, tap to skip, and never on a deep link or with reduced motion
   (function(){const IN=document.getElementById('intro');if(!IN)return;
-    let seen=false;try{seen=sessionStorage.getItem('mj-intro')==='1'}catch(e){}
     const deep=location.hash&&location.hash!=='#p01';
-    if(seen||deep||reduce){IN.remove();return}
-    try{sessionStorage.setItem('mj-intro','1')}catch(e){}
+    if(deep||reduce){IN.remove();return}
     const b=document.body;b.classList.add('introing');
     const c=IN.querySelector('canvas'),x=c.getContext('2d'),cols=['#F5F4F0','#E6E5DF','#D2D1CB','#B9B8B1','#8A8A85','#DDE6A8','#EBFF79'],t0=performance.now();let W,H,cell,alive=true;
     function rs(){const d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0);cell=Math.max(12,Math.round(W/110))}
