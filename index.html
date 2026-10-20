@@ -313,14 +313,30 @@ body.introing{overflow:hidden}
 .mvn a{text-decoration:none;border-bottom:1px solid var(--ink)}
 /* sub-pages: strip at the top of the page, nested entries in the index */
 section[hidden],.next[hidden]{display:none}
-.subnav{padding-block:18px 0;border-bottom:1px solid var(--ink)}
-.subnav ol{list-style:none;margin:0;padding:0 0 14px;display:flex;flex-wrap:wrap;gap:8px}
-.subnav a{display:flex;gap:8px;text-decoration:none;border:1px solid var(--ink);padding:6px 12px;white-space:nowrap}
-.subnav .n{color:var(--stone);font-variant-numeric:tabular-nums}
+.subnav{padding-block:22px 0;border-bottom:1px solid var(--ink)}
+.subnav .sl{margin:0 0 12px;color:var(--stone)}
+.subnav ol{list-style:none;margin:0;padding:0 0 22px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:700px){.subnav ol{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.subnav a{display:grid;gap:2px;align-content:center;min-height:78px;text-decoration:none;border:2px solid var(--ink);padding:14px 16px;font-family:var(--f-head);font-weight:600;font-size:calc(var(--u) * 1.25);line-height:1.25;letter-spacing:-.01em}
+.subnav .n{font-family:var(--f-mono);font-weight:400;font-size:13px;letter-spacing:0;color:var(--stone);font-variant-numeric:tabular-nums}
 .subnav li.on a{background:var(--ink);color:var(--paper)}
 .subnav li.on .n{color:var(--lime)}
-.subnav a:hover{background:var(--lime)}
-.subnav li.on a:hover{background:var(--ink)}
+.subnav a:hover{background:var(--lime);color:var(--ink)}
+.subnav li.on a:hover{background:var(--ink);color:var(--paper)}
+.subbar{position:fixed;top:0;left:0;right:0;z-index:40;background:var(--paper);box-shadow:0 6px 12px -8px rgba(0,0,0,.18);transform:translateY(-102%);visibility:hidden;transition:transform .25s var(--ease),visibility 0s .25s}
+.subbar.show{transform:none;visibility:visible;transition:transform .25s var(--ease)}
+.subbar ol{list-style:none;margin:0 auto;padding:8px var(--gut);display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;width:fit-content;max-width:100%}
+.subbar ol::-webkit-scrollbar{display:none}
+.subbar a{display:flex;gap:7px;align-items:center;min-height:42px;padding:6px 14px;border:1px solid var(--ink);text-decoration:none;white-space:nowrap;font-size:14px}
+.subbar .n{color:var(--stone);font-variant-numeric:tabular-nums}
+.subbar li.on a{background:var(--ink);color:var(--paper)}
+.subbar li.on .n{color:var(--lime)}
+.subbar a:hover{background:var(--lime);color:var(--ink)}
+.subbar li.on a:hover{background:var(--ink);color:var(--paper)}
+section[data-sub]{scroll-margin-top:64px}
+@media (max-width:959px){.subbar{padding-right:56px}.subbar ol{padding-right:8px}}
+@media (max-width:959px){body.substuck:not(.menu-open) #menuBtn span{background:#000!important}}
+@media (prefers-reduced-motion:reduce){.subbar,.subbar.show{transition:none}}
 .grp .subl{display:none!important;list-style:none;margin:2px 0 6px 12px;padding:0 0 0 12px;border-left:1px solid var(--faint);font-size:12px}
 .grp li.on > .subl{display:flex!important;flex-direction:column}
 .grp .subl li{padding-block:2px}
@@ -1713,7 +1729,10 @@ body{background-image:none!important;background-color:#FFFFFF}
   const SUBS={};
   pages.forEach(pg=>{const ss=[...pg.querySelectorAll('section[data-sub]')];if(!ss.length)return;SUBS[pg.id]=ss;
     const no=pg.id.slice(1),nav=pg.querySelector('.subnav');
-    nav.innerHTML='<ol>'+ss.map((x,i)=>`<li data-s="${x.id}"><a href="#${x.id}"><span class="n">${no}.${i+1}</span><span class="t">${x.dataset.sub}</span></a></li>`).join('')+'</ol>';
+    const lis=ss.map((x,i)=>`<li data-s="${x.id}"><a href="#${x.id}"><span class="n">${no}.${i+1}</span><span class="t">${x.dataset.sub}</span></a></li>`).join('');
+    const lv=(nav.getAttribute('aria-label')||'').replace(/ sections$/,'');
+    nav.innerHTML=`<p class="sl">${lv} has ${ss.length} sections. tap one to switch:</p><ol>${lis}</ol>`;
+    nav.insertAdjacentHTML('afterend',`<nav class="subbar" aria-label="${lv} sections"><ol>${lis}</ol></nav>`);
     const li=document.querySelector(`.grp li[data-p="${pg.id}"]`);
     if(li)li.insertAdjacentHTML('beforeend','<ol class="subl">'+ss.map((x,i)=>`<li data-s="${x.id}"><a href="#${x.id}"><span class="n">${no}.${i+1}</span><span class="t">${x.dataset.sub}</span></a></li>`).join('')+'</ol>');
     const [pp,pl]=pg.dataset.prev.split('|'),[np,nl]=pg.dataset.next.split('|');
@@ -1731,7 +1750,13 @@ body{background-image:none!important;background-color:#FFFFFF}
     document.querySelectorAll('[data-s]').forEach(li=>li.classList.toggle('on',li.dataset.s===sub));
     if(id==='p01')wake();
     return sub}
-  window.addEventListener('hashchange',()=>{const sub=show();if(target)target.scrollIntoView({block:'start'});else if(sub){const nv=document.querySelector(`#${current} .subnav`);if(nv&&nv.getBoundingClientRect().top<0)nv.scrollIntoView({block:'start'});else if(!nv)window.scrollTo(0,0)}else window.scrollTo(0,0)});
+  {let tk=0;const bar=()=>{tk=0;const pg=document.getElementById(current),nv=pg&&pg.querySelector('.subnav'),sb=pg&&pg.querySelector('.subbar');
+    document.querySelectorAll('.subbar.show').forEach(x=>{if(x!==sb)x.classList.remove('show')});
+    const on=!!(nv&&sb&&nv.getBoundingClientRect().bottom<58);if(sb)sb.classList.toggle('show',on);document.body.classList.toggle('substuck',on);
+    if(on){const cur=sb.querySelector('li.on'),ol=sb.querySelector('ol');if(cur&&ol){const l=cur.offsetLeft-ol.offsetLeft-12;if(Math.abs(ol.scrollLeft-l)>40)ol.scrollLeft=l}}};
+    const q=()=>{if(!tk)tk=requestAnimationFrame(bar)};
+    window.addEventListener('scroll',q,{passive:true});window.addEventListener('hashchange',()=>setTimeout(bar,60));window.addEventListener('resize',q)}
+  window.addEventListener('hashchange',()=>{const sub=show();if(target)target.scrollIntoView({block:'start'});else if(sub){const nv=document.querySelector(`#${current} .subnav`);if(nv&&nv.getBoundingClientRect().bottom<58){window.scrollTo(0,window.scrollY+nv.getBoundingClientRect().bottom-34)}else if(!nv)window.scrollTo(0,0)}else window.scrollTo(0,0)});
 
   // countdown dial: turns in to today, and turns with the scroll
   const cv=document.getElementById('dial'),cx2=cv.getContext('2d');
@@ -2234,7 +2259,110 @@ body{background-image:none!important;background-color:#FFFFFF}
     ['65,000{円|えん}',1,'','62,000 yen rent plus the 3,000 yen management fee.'],
     ['62,000{円|えん}',0,'missed the note','the ※ note adds a monthly fee.'],
     ['68,000{円|えん}',0,'wrong column','that\'s A\'s rent.'],
-    ['59,000{円|えん}',0,'misread','the fee is added, not taken off.']]}]}];
+    ['59,000{円|えん}',0,'misread','the fee is added, not taken off.']]}]},
+  {k:'short',t:'a notice from the library',p:['{利用者|りようしゃ}の{皆様|みなさま}へ','{市立図書館|しりつとしょかん}は、{設備|せつび}の{点検|てんけん}のため、{来週|らいしゅう}の{月曜日|げつようび}から{金曜日|きんようび}まで{休館|きゅうかん}いたします。⟦1|{休館中|きゅうかんちゅう}は、インターネットでの{予約|よやく}のみ{受|う}け{付|つ}けております。⟧{本|ほん}の{貸|か}し{出|だ}しと{返却|へんきゃく}はできません。⟦2|なお、{休館中|きゅうかんちゅう}に{返却期限|へんきゃくきげん}が{来|く}る{本|ほん}は、{期限|きげん}を{一週間|いっしゅうかん}{延|の}ばします。⟧ご{不便|ふべん}をおかけしますが、ご{理解|りかい}くださいますようお{願|ねが}いいたします。','{市立図書館|しりつとしょかん}'],
+   q:[{q:'{休館中|きゅうかんちゅう}にできることはどれか。',o:[
+    ['インターネットで{本|ほん}を{予約|よやく}する',1,'','のみ narrows it down: the only thing still open is reservations on the internet.'],
+    ['{窓口|まどぐち}で{本|ほん}を{借|か}りる',0,'opposite','lending is closed. 貸し出しはできません.'],
+    ['{返却|へんきゃく}ポストに{本|ほん}を{返|かえ}す',0,'opposite','returns are closed too.'],
+    ['{図書館|としょかん}で{点検|てんけん}を{手伝|てつだ}う',0,'not in the text','the inspection is just the reason for the closure.']]},
+    {q:'{休館中|きゅうかんちゅう}に{返却期限|へんきゃくきげん}が{来|く}る{本|ほん}は、どうなるか。',o:[
+    ['{期限|きげん}が{一週間|いっしゅうかん}{延|の}びる',1,'','期限を一週間延ばします says it directly.'],
+    ['{期限|きげん}が{一か月|いっかげつ}{延|の}びる',0,'misread','it\'s one week, not one month.'],
+    ['{休館|きゅうかん}が{終|お}わるまでに{返|かえ}さなければならない',0,'opposite','the deadline is pushed back, so there\'s no rush.'],
+    ['{返却|へんきゃく}しなくてもよい',0,'too far','the deadline is extended, not cancelled.']]}]},
+  {k:'short',t:'stores that close at night',p:['{二十四時間営業|にじゅうよじかんえいぎょう}のコンビニは、{私|わたし}たちの{生活|せいかつ}に{欠|か}かせないものだと{思|おも}われてきた。しかし{最近|さいきん}、{夜|よる}は{店|みせ}を{閉|し}める{店|みせ}が{増|ふ}えている。⟦1|{夜|よる}に{働|はたら}く{人|ひと}を{集|あつ}めるのが、{難|むずか}しくなったからだ。⟧{確|たし}かに、{夜中|よなか}に{買|か}い{物|もの}ができなくなるのは{不便|ふべん}だ。⟦2|だが、{私|わたし}たちの{便利|べんり}さのために{誰|だれ}かが{無理|むり}をしているのだとしたら、{私|わたし}たちのほうが{少|すこ}し{不便|ふべん}を{受|う}け{入|い}れてもよいのではないだろうか。⟧'],
+   q:[{q:'{夜|よる}に{店|みせ}を{閉|し}める{店|みせ}が{増|ふ}えているのはなぜか。',o:[
+    ['{夜|よる}に{働|はたら}く{人|ひと}が{集|あつ}まりにくくなったから',1,'','the line after the first sentence gives the reason: hiring night staff got harder.'],
+    ['{夜|よる}は{客|きゃく}が{来|こ}なくなったから',0,'not in the text','nothing is said about customers.'],
+    ['{電気代|でんきだい}が{高|たか}くなったから',0,'not in the text','costs never come up.'],
+    ['{法律|ほうりつ}で{決|き}まったから',0,'not in the text','no law is mentioned.']]},
+    {q:'{筆者|ひっしゃ}の{考|かんが}えに{合|あ}うものはどれか。',o:[
+    ['{誰|だれ}かが{無理|むり}をするなら、{不便|ふべん}を{受|う}け{入|い}れてもよい',1,'','だが... ではないだろうか is where the writer states the opinion.'],
+    ['{二十四時間営業|にじゅうよじかんえいぎょう}は{続|つづ}けるべきだ',0,'opposite','the writer accepts the stores closing.'],
+    ['{夜中|よなか}に{買|か}い{物|もの}ができなくても、{不便|ふべん}ではない',0,'twisted','the writer says it is inconvenient (確かに不便だ), but worth accepting.'],
+    ['コンビニは{減|へ}らすべきだ',0,'too far','the writer talks about opening hours, not about the number of stores.']]}]},
+  {k:'medium',t:'sorry or thank you',p:['{日本人|にほんじん}は、「すみません」という{言葉|ことば}をよく{使|つか}う。ドアを{開|あ}けてもらったときも、{席|せき}を{譲|ゆず}ってもらったときも、つい「すみません」と{言|い}ってしまう。⟦1|{本来|ほんらい}は{謝|あやま}る{言葉|ことば}だが、{感謝|かんしゃ}の{気持|きも}ちを{表|あらわ}すときにも{使|つか}われるのだ。⟧','{先日|せんじつ}、{友人|ゆうじん}にこう{言|い}われた。「{謝|あやま}られるより、ありがとうと{言|い}われたほうがうれしいよ。」⟦2|その{言葉|ことば}を{聞|き}いて、{私|わたし}は{感謝|かんしゃ}を{伝|つた}えているつもりで、{実|じつ}は「{申|もう}し{訳|わけ}ない」という{気持|きも}ちを{伝|つた}えていたことに{気|き}づいた。⟧','それ{以来|いらい}、「すみません」と{言|い}いそうになったら、「ありがとう」に{言|い}い{換|か}えるようにしている。⟦3|たったそれだけのことで、{相手|あいて}の{表情|ひょうじょう}が{明|あか}るくなり、{私自身|わたしじしん}も{気持|きも}ちが{軽|かる}くなるのだから{不思議|ふしぎ}だ。⟧'],
+   q:[{q:'「すみません」について、{筆者|ひっしゃ}はどう{説明|せつめい}しているか。',o:[
+    ['{謝|あやま}るときだけでなく、{感謝|かんしゃ}するときにも{使|つか}う',1,'','本来は謝る言葉だが... にも: it started as an apology and spread to thanks.'],
+    ['{感謝|かんしゃ}するときにだけ{使|つか}う',0,'half right','its original meaning is apologising.'],
+    ['{謝|あやま}る{意味|いみ}は、もうなくなっている',0,'too far','本来は謝る言葉だが means the apology meaning is still there.'],
+    ['{目上|めうえ}の{人|ひと}にだけ{使|つか}う',0,'not in the text','who you say it to never comes up.']]},
+    {q:'{筆者|ひっしゃ}が{友人|ゆうじん}の{言葉|ことば}を{聞|き}いて{気|き}づいたことは{何|なに}か。',o:[
+    ['{感謝|かんしゃ}のつもりが、{申|もう}し{訳|わけ}ないという{気持|きも}ちを{伝|つた}えていたこと',1,'','the second paragraph: 実は is the signal for the real discovery.'],
+    ['{友人|ゆうじん}が{自分|じぶん}に{怒|いか}っていたこと',0,'not in the text','the friend wasn\'t angry.'],
+    ['「ありがとう」は{言|い}いにくい{言葉|ことば}だということ',0,'not in the text','difficulty is never mentioned.'],
+    ['{謝|あやま}られるとうれしいということ',0,'opposite','the friend said the reverse.']]},
+    {q:'「ありがとう」に{言|い}い{換|か}えるようにして、どうなったか。',o:[
+    ['{相手|あいて}も{自分|じぶん}も、{気持|きも}ちが{明|あか}るくなった',1,'','the last paragraph: the other person\'s face brightens, and the writer feels lighter.'],
+    ['{相手|あいて}に{注意|ちゅうい}されなくなった',0,'not in the text','nobody warns the writer.'],
+    ['{言|い}い{換|か}えるのが{難|むずか}しくなった',0,'not in the text','difficulty isn\'t mentioned.'],
+    ['すみませんと{言|い}わなくなった',0,'too far','the writer tries to swap it, not to stop saying it altogether.']]}]},
+  {k:'medium',t:'a neighbour\'s good morning',p:['{引|ひ}っ{越|こ}してきたばかりのころ、{隣|となり}に{住|す}む{年配|ねんぱい}の{女性|じょせい}に、{毎朝|まいあさ}「おはようございます」と{声|こえ}をかけられた。{正直|しょうじき}に{言|い}うと、{最初|さいしょ}は{少|すこ}しうるさく{感|かん}じた。⟦1|{都会|とかい}では、{知|し}らない{人|ひと}に{話|はな}しかけられることがほとんどなかったからだ。⟧','ところが、{一か月|いっかげつ}ほどたったある{朝|あさ}、その{声|こえ}が{聞|き}こえなかった。{気|き}になって、{仕事|しごと}から{帰|かえ}ってから{訪|たず}ねてみると、{風邪|かぜ}で{寝|ね}ていたのだという。⟦2|{私|わたし}は、{挨拶|あいさつ}がないだけでこんなに{落|お}ち{着|つ}かない{気持|きも}ちになるとは、{思|おも}ってもみなかった。⟧','それからは、{私|わたし}のほうから{先|さき}に{声|こえ}をかけるようにしている。⟦3|{挨拶|あいさつ}は{単|たん}なる{習慣|しゅうかん}ではなく、「あなたのことを{気|き}にかけていますよ」という{合図|あいず}なのかもしれない。⟧'],
+   q:[{q:'{筆者|ひっしゃ}が{最初|さいしょ}、{隣|となり}の{人|ひと}の{挨拶|あいさつ}をうるさく{感|かん}じたのはなぜか。',o:[
+    ['{都会|とかい}では、{知|し}らない{人|ひと}に{話|はな}しかけられることが{少|すく}なかったから',1,'','the last line of the first paragraph gives it: からだ marks the reason.'],
+    ['{毎朝|まいあさ}とても{早|はや}い{時間|じかん}だったから',0,'not in the text','the time of day is never mentioned.'],
+    ['{女性|じょせい}の{声|こえ}が{大|おお}きかったから',0,'not in the text','nothing about the voice itself.'],
+    ['{女性|じょせい}が{筆者|ひっしゃ}に{注意|ちゅうい}したから',0,'twisted','she only said good morning.']]},
+    {q:'「{思|おも}ってもみなかった」とあるが、{何|なに}が{意外|いがい}だったのか。',o:[
+    ['{挨拶|あいさつ}がないだけで、{落|お}ち{着|つ}かない{気持|きも}ちになったこと',1,'','the sentence says exactly what she never expected: feeling uneasy just from missing a greeting.'],
+    ['{女性|じょせい}が{風邪|かぜ}をひいていたこと',0,'wrong part','the cold is just why the greeting stopped.'],
+    ['{仕事|しごと}から{早|はや}く{帰|かえ}れたこと',0,'not in the text','working hours aren\'t the point.'],
+    ['{一か月|いっかげつ}で{引|ひ}っ{越|こ}すことになったこと',0,'not in the text','she keeps living there.']]},
+    {q:'{筆者|ひっしゃ}の{考|かんが}えに{合|あ}うものはどれか。',o:[
+    ['{挨拶|あいさつ}には、{相手|あいて}を{気|き}にかけていることを{伝|つた}える{働|はたら}きがある',1,'','the last paragraph: 合図 means a signal that says "I\'m thinking of you".'],
+    ['{挨拶|あいさつ}は、{毎日|まいにち}しなくてもよい',0,'opposite','the writer now greets first, every day.'],
+    ['{挨拶|あいさつ}は、{年配|ねんぱい}の{人|ひと}にだけ{必要|ひつよう}だ',0,'not in the text','age is only a detail about the neighbour.'],
+    ['{挨拶|あいさつ}は、{単|たん}なる{習慣|しゅうかん}である',0,'opposite','単なる習慣ではなく: it\'s more than a habit.']]}]},
+  {k:'compare',t:'online or in the classroom',p:['A','オンライン{授業|じゅぎょう}には、{大|おお}きな{利点|りてん}がある。⟦1|{通学|つうがく}に{時間|じかん}をとられず、⟧⟦2|{自分|じぶん}の{都合|つごう}のよい{時間|じかん}に、{授業|じゅぎょう}を{見|み}ることもできる。⟧{遠|とお}くに{住|す}んでいる{学生|がくせい}や、{仕事|しごと}をしながら{学|まな}ぶ{人|ひと}にとっては、{特|とく}にありがたい。ただ、{友人|ゆうじん}ができにくいという{問題|もんだい}は、{確|たし}かにある。','B','{私|わたし}は、{教室|きょうしつ}で{受|う}ける{授業|じゅぎょう}のほうがよいと{思|おも}う。⟦2|{授業|じゅぎょう}のあとに、{先生|せんせい}や{友人|ゆうじん}にすぐ{質問|しつもん}したり、{意見|いけん}を{交換|こうかん}したりできるからだ。⟧そうした{何気|なにげ}ない{会話|かいわ}から{学|まな}ぶことも{多|おお}い。⟦1|もちろん、{通学|つうがく}は{大変|たいへん}だが、⟧それだけの{価値|かち}はあるはずだ。'],
+   q:[{q:'AとBの{両方|りょうほう}が{触|ふ}れている{点|てん}は{何|なに}か。',o:[
+    ['{通学|つうがく}に{手間|てま}や{時間|じかん}がかかること',1,'','A says commuting costs time. B says commuting is hard. both name it.'],
+    ['{友人|ゆうじん}ができにくいこと',0,'only one side','only A mentions making friends.'],
+    ['{先生|せんせい}にすぐ{質問|しつもん}できること',0,'only one side','only B mentions asking questions.'],
+    ['{仕事|しごと}をしながら{学|まな}べること',0,'only one side','only A mentions working students.']]},
+    {q:'AとBが{大切|たいせつ}だと{考|かんが}えていることは{何|なに}か。',o:[
+    ['Aは{時間|じかん}や{場所|ばしょ}の{自由|じゆう}、Bはその{場|ば}での{交流|こうりゅう}',1,'','compare the two lit lines: A values choosing when to watch, B values talking right after class.'],
+    ['AもBも、その{場|ば}での{交流|こうりゅう}',0,'half right','that\'s only B\'s point.'],
+    ['AもBも、{時間|じかん}や{場所|ばしょ}の{自由|じゆう}',0,'half right','that\'s only A\'s point.'],
+    ['Aはその{場|ば}での{交流|こうりゅう}、Bは{時間|じかん}や{場所|ばしょ}の{自由|じゆう}',0,'swapped','A and B are the other way round.']]}]},
+  {k:'long',t:'fixing instead of throwing away',p:['{最近|さいきん}、{壊|こわ}れた{物|もの}を{捨|す}てずに{直|なお}して{使|つか}う{人|ひと}が{増|ふ}えている。{各地|かくち}で「{修理|しゅうり}{教室|きょうしつ}」が{開|ひら}かれ、{傘|かさ}や{時計|とけい}、{古|ふる}い{家電|かでん}などを{持|も}ち{込|こ}む{人|ひと}で、にぎわっている。','その{背景|はいけい}にあるのは、{環境|かんきょう}への{関心|かんしん}の{高|たか}まりだけではない。⟦1|{新|あたら}しい{物|もの}が{安|やす}く{手|て}に{入|はい}る{時代|じだい}だからこそ、{一|ひと}つの{物|もの}を{長|なが}く{使|つか}うことに、かえって{価値|かち}を{感|かん}じる{人|ひと}が{出|で}てきたのである。⟧','{修理|しゅうり}{教室|きょうしつ}を{開|ひら}いている{男性|だんせい}は、「{直|なお}している{間|あいだ}に、その{物|もの}がどう{作|つく}られているかが{分|わ}かる」と{話|はな}す。⟦2|{参加者|さんかしゃ}の{多|おお}くが、{修理|しゅうり}が{終|お}わったときの{達成感|たっせいかん}に{加|くわ}えて、{物|もの}への{愛着|あいちゃく}が{深|ふか}まったと{答|こた}えているという。⟧','もちろん、すべての{物|もの}が{直|なお}せるわけではない。{修理代|しゅうりだい}が{新品|しんぴん}より{高|たか}くなることもある。⟦3|それでも、{捨|す}てる{前|まえ}に「{直|なお}せないだろうか」と{一度|いちど}{考|かんが}えてみる{習慣|しゅうかん}は、{私|わたし}たちの{物|もの}との{付|つ}き{合|あ}い{方|かた}を{変|か}えてくれるのではないだろうか。⟧'],
+   q:[{q:'{修理|しゅうり}して{使|つか}う{人|ひと}が{増|ふ}えているのはなぜか。',o:[
+    ['{新|あたら}しい{物|もの}が{安|やす}い{時代|じだい}だからこそ、{長|なが}く{使|つか}うことに{価値|かち}を{感|かん}じる{人|ひと}が{出|で}てきたから',1,'','the second paragraph: だからこそ links cheap new things to the value of using one thing long.'],
+    ['{環境|かんきょう}への{関心|かんしん}が{高|たか}まったことだけが{理由|りゆう}だから',0,'half right','だけではない: environment is a reason, but not the only one.'],
+    ['{修理代|しゅうりだい}が{新品|しんぴん}より{安|やす}いから',0,'opposite','paragraph 4 says repairs can cost more than new.'],
+    ['{新|あたら}しい{物|もの}が{手|て}に{入|はい}りにくいから',0,'opposite','new things are easy and cheap to get.']]},
+    {q:'{修理|しゅうり}{教室|きょうしつ}の{参加者|さんかしゃ}について、{正|ただ}しいものはどれか。',o:[
+    ['{修理|しゅうり}が{終|お}わると{達成感|たっせいかん}があり、{物|もの}への{愛着|あいちゃく}も{深|ふか}まったと{答|こた}える{人|ひと}が{多|おお}い',1,'','paragraph 3, last sentence.'],
+    ['{修理|しゅうり}がうまくできず、がっかりする{人|ひと}が{多|おお}い',0,'opposite','the participants talk about a sense of achievement.'],
+    ['{修理代|しゅうりだい}が{安|やす}いので{参加|さんか}している',0,'not in the text','the cost is only mentioned in paragraph 4, and as a drawback.'],
+    ['{物|もの}の{作|つく}り{方|かた}を{教|おし}える{仕事|しごと}をしたい{人|ひと}が{多|おお}い',0,'not in the text','that\'s not what participants are said to want.']]},
+    {q:'{筆者|ひっしゃ}が{最|もっと}も{言|い}いたいことは{何|なに}か。',o:[
+    ['{捨|す}てる{前|まえ}に、{直|なお}せないか{考|かんが}える{習慣|しゅうかん}が、{物|もの}との{付|つ}き{合|あ}い{方|かた}を{変|か}える',1,'','the last paragraph: それでも... のではないだろうか is the conclusion.'],
+    ['{壊|こわ}れた{物|もの}は、すべて{直|なお}して{使|つか}うべきだ',0,'too far','the writer admits not everything can be fixed.'],
+    ['{新|あたら}しい{物|もの}は{買|か}わないほうがよい',0,'too far','the writer never tells people to stop buying.'],
+    ['{修理|しゅうり}{教室|きょうしつ}は、もっと{安|やす}くするべきだ',0,'not in the text','prices of the classes aren\'t discussed.']]}]},
+  {k:'info',t:'the sports centre',tbl:{h:['','プールだけ','ジムだけ','プールとジム'],r:[['1{回|かい}の{利用|りよう}','500{円|えん}','600{円|えん}','900{円|えん}'],['{月会費|つきかいひ}（{毎月|まいつき}）','3,000{円|えん}','4,000{円|えん}','⟦1|5,500{円|えん}⟧']],n:['※ {月会費|つきかいひ}で{利用|りよう}する{場合|ばあい}は、{最初|さいしょ}の{月|つき}だけ、{入会金|にゅうかいきん}として2,000{円|えん}かかります。','※ ⟦2|{市内|しない}に{住|す}んでいる{人|ひと}は、{月会費|つきかいひ}が1{割|わり}{安|やす}くなります。⟧']},
+   q:[{q:'{市内|しない}に{住|す}んでいるミンさんは、プールとジムの{月会費|つきかいひ}で{入会|にゅうかい}する。{最初|さいしょ}の{月|つき}は、{全部|ぜんぶ}でいくらかかるか。',o:[
+    ['6,950{円|えん}',1,'','5,500 yen with 10% off is 4,950 yen, plus the 2,000 yen entrance fee in the first month.'],
+    ['4,950{円|えん}',0,'missed the note','the ※ note adds an entrance fee in the first month.'],
+    ['7,500{円|えん}',0,'missed the note','this ignores the 1割 discount for people who live in the city.'],
+    ['5,500{円|えん}',0,'missed the note','that\'s the base monthly fee. there\'s a discount and an entrance fee.']]},
+    {q:'{市外|しがい}に{住|す}んでいるリンさんは、プールだけを{月|つき}に8{回|かい}{使|つか}う。{会員|かいいん}にならずに、1{回|かい}ずつ{払|はら}うと、{会員|かいいん}になる{場合|ばあい}の{最初|さいしょ}の{月|つき}より、いくら{安|やす}いか。',o:[
+    ['1,000{円|えん}',1,'','paying each time: 500 x 8 = 4,000 yen. joining: 3,000 + 2,000 = 5,000 yen. the difference is 1,000 yen.'],
+    ['500{円|えん}',0,'misread','not the 1回 price. compare the two totals.'],
+    ['2,000{円|えん}',0,'half right','that\'s only the entrance fee, but the monthly fee matters too.'],
+    ['4,000{円|えん}',0,'misread','that\'s what paying each time costs in total, not the difference.']]}]},
+  {k:'info',t:'guided tours',tbl:{h:['コース','{出発|しゅっぱつ}','{時間|じかん}','{料金|りょうきん}（{大人|おとな}）'],r:[['A {市内|しない}めぐり','9:00','3{時間|じかん}','2,500{円|えん}'],['B {城|しろ}と{庭園|ていえん}','10:30','⟦1|4{時間|じかん}⟧','4,000{円|えん}'],['C {夜景|やけい}','18:00','2{時間|じかん}','3,500{円|えん}']],n:['※ ⟦2|{小学生|しょうがくせい}は、{大人|おとな}の{半額|はんがく}です。ただし、Cは{小学生|しょうがくせい}は{参加|さんか}できません。⟧','※ {予約|よやく}は、{出発|しゅっぱつ}の{三日前|みっかまえ}までにお{願|ねが}いします。']},
+   q:[{q:'ワンさんは、{午後|ごご}5{時|じ}まで{別|べつ}の{予定|よてい}がある。そのあとで{参加|さんか}できるコースはどれか。',o:[
+    ['C',1,'','only C leaves after 5 pm, at 18:00.'],
+    ['A',0,'wrong row','A leaves at 9:00.'],
+    ['B',0,'wrong row','B leaves at 10:30 and takes 4 hours.'],
+    ['{参加|さんか}できるコースはない',0,'opposite','C fits.']]},
+    {q:'{大人|おとな}{一人|ひとり}と{小学生|しょうがくせい}{一人|ひとり}が、Bに{参加|さんか}する。{全部|ぜんぶ}でいくらかかるか。',o:[
+    ['6,000{円|えん}',1,'','4,000 yen for the adult, and the child is half: 2,000 yen.'],
+    ['8,000{円|えん}',0,'missed the note','that treats the child as a full adult price.'],
+    ['4,000{円|えん}',0,'misread','that\'s only the adult. the child pays too, at half.'],
+    ['2,000{円|えん}',0,'misread','that\'s only the child\'s fare. the adult pays too.']]}]}];
   const N1R=[
   {k:'short',t:'empty time',p:['{効率|こうりつ}を{重視|じゅうし}するあまり、{私|わたし}たちは{何|なに}もしない{時間|じかん}を{無駄|むだ}だと{見|み}なしがちである。⟦1|しかし、{新|あたら}しい{発想|はっそう}というものは、{往々|おうおう}にして、{目的|もくてき}もなく{過|す}ごす{時間|じかん}の{中|なか}から{生|う}まれる。⟧{余白|よはく}のない{日々|ひび}は、{一見|いっけん}{充実|じゅうじつ}しているようでいて、{実|じつ}は{考|かんが}える{余地|よち}を{奪|うば}っているのかもしれない。'],
    q:[{q:'{筆者|ひっしゃ}の{考|かんが}えに{合|あ}うものはどれか。',o:[
