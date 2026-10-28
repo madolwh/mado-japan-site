@@ -369,6 +369,15 @@ section[data-sub]{scroll-margin-top:64px}
 #unit-v,#unit-g,.uview{display:grid;gap:24px;min-width:0}
 .uhead .ut{padding-bottom:4px}
 .uhead .ut{font-family:var(--f-head);font-weight:600;font-size:var(--hook);letter-spacing:-.035em;line-height:1}
+.lqh{font-family:var(--f-head);font-weight:600;font-size:15px;margin:26px 0 2px}
+.lqn{margin:0 0 8px;font-size:13px;color:var(--stone)}
+.lql .uqe{color:var(--ink);font-size:14px}
+.lqp{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.lqp button{font:inherit;font-size:14px;min-height:44px;padding:8px 16px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer}
+.lqq{font-family:var(--f-jp);font-size:15px}
+.lqs{display:grid;gap:4px;margin:0 0 6px;font-family:var(--f-jp);font-size:15px}
+.lqs b{font-weight:500;color:var(--stone);font-size:12px;margin-right:6px}
+.uqw p{margin:0}
 .uq{margin:44px 0 0;max-width:720px}
 .uq .kh{font-size:calc(var(--u) * 1.8);margin-bottom:6px}
 .uql{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink);counter-reset:uq}
@@ -1117,6 +1126,12 @@ body{background-image:none!important;background-color:#FFFFFF}
           </div>
         </div>
         <div class="lsb">
+          <h3>listening practice <span class="jpm">練習</span></h3>
+          <p>16 short questions in the same four parts as the real test. play first, answer, then read the script. the voice is your device's own Japanese voice, and the second speaker is a little lower. like the real test, try it on one listen.</p>
+          <div id="n5-lq"></div>
+          <p class="novoice stone" hidden style="font-size:12px">your device has no Japanese voice, so ▶ won't play. add one in your phone's settings, under spoken content or text to speech.</p>
+        </div>
+        <div class="lsb">
           <h3>speaking on HelloTalk <span class="jpm">会話</span></h3>
           <p>the JLPT doesn't test speaking, but speaking is how you actually start using Japanese. most of mine came from <a class="ext" href="https://www.hellotalk.com" target="_blank" rel="noopener">HelloTalk ></a>, the same place my listening came from.</p>
           <dl class="rows">
@@ -1163,6 +1178,18 @@ body{background-image:none!important;background-color:#FFFFFF}
             <div><dt>when</dt><dd>twice a year, in July and December. some cities outside Japan only hold one of them</dd></div>
             <div><dt>where</dt><dd>through the test's local host in your city. find yours on <a class="ext" href="https://www.jlpt.jp/e/" target="_blank" rel="noopener">the JLPT site ></a></dd></div>
             <div><dt>tip</dt><dd>registration closes well before test day, so check your city's dates early</dd></div>
+          </dl>
+        </div>
+        <div class="lsb">
+          <h3>4. test day <span class="jpm">試験当日</span></h3>
+          <dl class="rows">
+            <div><dt>bring</dt><dd>your test voucher, a photo ID with the same name, HB or No. 2 pencils, and a plastic eraser</dd></div>
+            <div><dt>pencil only</dt><dd>an answer sheet filled in with a pen doesn't count. fill each circle all the way</dd></div>
+            <div><dt>phone</dt><dd>switch it off. if it rings or buzzes during the test, it counts against you</dd></div>
+            <div><dt>times</dt><dd>vocabulary 20 min, grammar and reading 40 min, listening 30 min</dd></div>
+            <div><dt>listening</dt><dd>each question plays once. you can't replay it, so answer and move on</dd></div>
+            <div><dt>arrive</dt><dd>the time is different in every city. it's on your voucher</dd></div>
+            <div><dt>guess</dt><dd>answer every question. a wrong answer costs nothing</dd></div>
           </dl>
         </div>
         <div class="inkp">
@@ -1951,6 +1978,7 @@ body{background-image:none!important;background-color:#FFFFFF}
     if(synth){pickVoice();synth.onvoiceschanged=pickVoice}else document.querySelectorAll('.novoice').forEach(e=>e.hidden=false);
     function say(t){if(!canSpeak||!synth)return;try{synth.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;u.rate=t.length<=2?.55:.65;synth.speak(u)}catch(e){}}
     window.__say=say;window.__stop=()=>{try{synth&&synth.cancel()}catch(e){}};
+    window.__sayLines=ls=>{if(!canSpeak||!synth)return;try{synth.cancel();ls.forEach(l=>{const u=new SpeechSynthesisUtterance(l[1].replace(/\s/g,''));u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;u.rate=.72;u.pitch=l[0]==='M'?.7:1.15;synth.speak(u)})}catch(e){}};
 
     // romaji switch, remembered on this device
     function setR(rk,art,on){const a=document.getElementById(art);if(a)a.classList.toggle('no-romaji',!on);document.querySelectorAll(`.rmjsw[data-rk="${rk}"]`).forEach(b=>{b.setAttribute('aria-pressed',on);b.querySelector('b').textContent=on?'on':'off'});store.set(rk,on)}
@@ -2837,6 +2865,22 @@ body{background-image:none!important;background-color:#FFFFFF}
     document.getElementById(x+'t-next').onclick=()=>{stop();if(i<P.length-1){i++;left=P[i][1]*60}show()};
     document.getElementById(x+'t-reset').onclick=()=>{stop();i=0;left=P[0][1]*60;show()};
     show()}
+
+  // N5 listening practice: device voice, speaker two is pitched lower
+  const N5LQ=[{"p": 1, "s": [["F", "すみません、りんごを ください。"], ["M", "はい、いくつですか。"], ["F", "みっつ ください。それから、みかんも ふたつ ください。"]], "q": "おんなの ひとは なにを かいますか。", "e": "what does the woman buy?", "o": ["りんご 2つと みかん 3つ", "りんご 3つと みかん 2つ", "りんご 3つだけ", "みかん 2つだけ"], "w": "みっつ goes with りんご, and then みかんも ふたつ.", "a": 1}, {"p": 1, "s": [["M", "あした、なんじに がっこうへ きますか。"], ["F", "8じはんに きてください。テストは 9じからです。"], ["M", "わかりました。"]], "q": "おとこの ひとは なんじに がっこうへ いきますか。", "e": "what time does the man go to school?", "o": ["9じ", "8じ", "9じはん", "8じはん"], "w": "he comes at 8じはん. 9じ is when the test starts, a trap.", "a": 3}, {"p": 1, "s": [["F", "せんせい、きょうの しゅくだいは なんですか。"], ["M", "20ページを よんで、かんじを 5つ かいて ください。"]], "q": "がくせいは なにを しますか。", "e": "what does the student do?", "o": ["5ページを よんで、かんじを 20 かく", "20ページを よんで、かんじを 5つ かく", "かんじを 20 かく", "25ページを よむ"], "w": "20ページを よんで = read page 20, and then かんじを 5つ かいて = write 5 kanji.", "a": 1}, {"p": 1, "s": [["M", "すみません、ゆうびんきょくは どこですか。"], ["F", "この みちを まっすぐ いって、しんごうを みぎです。ぎんこうの となりですよ。"]], "q": "ゆうびんきょくは どこですか。", "e": "where is the post office?", "o": ["しんごうを ひだり、ぎんこうの となり", "しんごうを みぎ、ぎんこうの まえ", "まっすぐ、えきの となり", "しんごうを みぎ、ぎんこうの となり"], "w": "みぎ = right. となり = next to. both have to match.", "a": 3}, {"p": 2, "s": [["F", "きのう、パーティーに いきましたか。"], ["M", "いいえ、いきませんでした。あたまが いたかったですから。"], ["F", "そうですか。もう だいじょうぶですか。"], ["M", "はい、きょうは げんきです。"]], "q": "おとこの ひとは どうして パーティーに いきませんでしたか。", "e": "why didn't the man go to the party?", "o": ["いそがしかったから", "あたまが いたかったから", "テストが あったから", "ともだちが いなかったから"], "w": "〜から gives the reason: あたまが いたかった = his head hurt.", "a": 1}, {"p": 2, "s": [["M", "やまださんの おにいさんは どの ひとですか。"], ["F", "あの めがねを かけて いる ひとです。"], ["M", "あの せが たかい ひとですか。"], ["F", "いいえ、その となりの ひくい ひとです。"]], "q": "やまださんの おにいさんは どの ひとですか。", "e": "which one is Yamada's older brother?", "o": ["めがねを かけて いて、せが たかい", "めがねを かけて いなくて、せが ひくい", "めがねを かけて いなくて、せが たかい", "めがねを かけて いて、せが ひくい"], "w": "he wears glasses, and いいえ … ひくい ひと means the short one, not the tall one.", "a": 3}, {"p": 2, "s": [["F", "なつやすみは どこへ いきますか。"], ["M", "きょねんは ほっかいどうへ いきました。ことしは おきなわへ いきたいです。"]], "q": "おとこの ひとは ことし どこへ いきたいですか。", "e": "where does the man want to go this year?", "o": ["ほっかいどう", "おきなわ", "とうきょう", "どこへも いきません"], "w": "きょねん = last year (ほっかいどう). ことし = this year (おきなわ).", "a": 1}, {"p": 3, "s": [], "q": "", "e": "you're leaving home in the morning. what do you say?", "o": ["いってきます", "ただいま", "いただきます"], "w": "いってきます is said when you leave. ただいま is when you come home.", "a": 0}, {"p": 3, "s": [], "q": "", "e": "you want your friend to wait a moment. what do you say?", "o": ["ちょっと まちましょう", "ちょっと まちました", "ちょっと まって ください"], "w": "て form + ください asks someone to do something.", "a": 2}, {"p": 3, "s": [], "q": "", "e": "you want to borrow your friend's pen. what do you say?", "o": ["ペンを かりて ください", "ペンを かして ください", "ペンを かしましょう"], "w": "かします = lend. you ask your friend to lend: かして ください.", "a": 1}, {"p": 4, "s": [["F", "はじめまして。"]], "q": "", "e": "", "o": ["どうぞ よろしく おねがいします", "おかえりなさい", "ごちそうさまでした"], "w": "はじめまして is answered with よろしく おねがいします.", "a": 0}, {"p": 4, "s": [["M", "ありがとうございました。"]], "q": "", "e": "", "o": ["どうぞ", "いってらっしゃい", "どういたしまして"], "w": "どういたしまして = you're welcome.", "a": 2}, {"p": 4, "s": [["F", "いっしょに おちゃを のみませんか。"]], "q": "", "e": "", "o": ["いいえ、のみました", "ええ、のみましょう", "はい、のんで います"], "w": "ませんか invites. ましょう says yes, let's.", "a": 1}, {"p": 4, "s": [["M", "これ、いくらですか。"]], "q": "", "e": "", "o": ["300えんです", "3じです", "みっつです"], "w": "いくら asks a price, so the answer is in えん.", "a": 0}, {"p": 4, "s": [["F", "ただいま。"]], "q": "", "e": "", "o": ["いってらっしゃい", "いただきます", "おかえりなさい"], "w": "ただいま = I'm home. おかえりなさい = welcome back.", "a": 2}, {"p": 4, "s": [["M", "あしたは なんようびですか。"]], "q": "", "e": "", "o": ["あしたです", "もくようびです", "10じです"], "w": "なんようび asks for a day of the week.", "a": 1}];
+  (function(){const host=document.getElementById('n5-lq');if(!host)return;const P={"1": ["part 1: what will they do?", "課題理解", "listen, then pick what happens."], "2": ["part 2: listen for the point", "ポイント理解", "one detail decides it. watch for traps."], "3": ["part 3: what do you say?", "発話表現", "read the situation, play the choices, pick the right line."], "4": ["part 4: quick reply", "即時応答", "one line, three replies. pick the natural one."]};
+    const nm={F:'おんな',M:'おとこ'};let h='',last=0;
+    N5LQ.forEach((x,i)=>{if(x.p!==last){if(last)h+='</ol>';last=x.p;h+=`<h4 class="lqh">${P[x.p][0]} <span class="jpm">${P[x.p][1]}</span></h4><p class="lqn">${P[x.p][2]}</p><ol class="uql lql" start="${i+1}">`}
+      const lines=x.s.length?x.s:[];
+      h+=`<li class="uqi" data-a="${x.a}" data-i="${i}">${x.e?`<p class="uqe">${x.e}</p>`:''}<div class="lqp"><button type="button" class="b-ink" data-play="${i}">▶ ${x.p===3?'play the choices':'play'}</button>${x.q?`<span class="lqq" lang="ja">${x.q}</span>`:''}</div>
+        <div class="uqo">${x.o.map((o,j)=>`<button type="button" lang="ja" data-o="${j}">${x.p>=3?(j+1)+'. ':''}${o}</button>`).join('')}</div>
+        <div class="uqw" hidden>${lines.length?`<p class="lqs" lang="ja">${lines.map(l=>`<span><b>${nm[l[0]]}</b> ${l[1]}</span>`).join('')}</p>`:''}<p>${x.w}</p></div></li>`});
+    host.innerHTML=h+'</ol>';
+    host.onclick=e=>{const pb=e.target.closest('[data-play]');if(pb){const x=N5LQ[+pb.dataset.play];
+        const ls=x.p===3?x.o.map((o,j)=>['F',(j+1)+'. '+o]):x.p===4?[...x.s]:[...x.s,['F',x.q]];
+        window.__sayLines&&window.__sayLines(ls);return}
+      const b=e.target.closest('[data-o]');if(!b)return;const li=b.closest('.uqi');const a=+li.dataset.a,o=+b.dataset.o;
+      if(o===a){b.classList.add('ok');li.classList.add('done');li.querySelector('.uqw').hidden=false}else b.classList.add('no')}})();
   READ(N5R,{u:'n5-units-r',b:'n5-unit-r',k:'mj-n5-read'});
   READ(N4R,{u:'n4-units-r',b:'n4-unit-r',k:'mj-n4-read'});
   READ(N3R,{u:'n3-units-r',b:'n3-unit-r',k:'mj-n3-read'});
