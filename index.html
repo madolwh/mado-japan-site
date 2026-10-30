@@ -348,8 +348,8 @@ section[data-sub]{scroll-margin-top:64px}
 .kblock{margin-top:30px;max-width:720px}
 .kh{font-family:var(--f-head);font-weight:600;font-size:var(--hook);letter-spacing:-.035em;line-height:1;margin:0 0 14px;display:flex;align-items:baseline;gap:10px}
 .kh .stone{font-size:13px;font-family:var(--f-body);letter-spacing:0;font-weight:400}
-.kgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (min-width:700px){.kgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.kcgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:700px){.kcgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .kcard{border:1px solid var(--ink);padding:12px 14px 14px;display:grid;gap:4px;align-content:start;min-width:0}
 .kcard .kj{font-family:var(--f-jp);font-weight:500;font-size:calc(var(--u) * 3.2);line-height:1.15}
 .kcard .kb{display:grid;gap:2px;font-size:13px;min-width:0}
@@ -2061,7 +2061,7 @@ body{background-image:none!important;background-color:#FFFFFF}
 
     // charts
     let alpha='h';const chart=document.getElementById('kchart');
-    const cell=x=>x?`<button type="button" class="kj" data-s="${conv(x[0])}"><span class="g" lang="ja">${conv(x[0])}</span><span class="rmj">${x[1]}</span></button>`:'<span class="gap" aria-hidden="true"></span>';
+    const cell=x=>x?`<button type="button" class="kc" data-s="${conv(x[0])}"><span class="g" lang="ja">${conv(x[0])}</span><span class="rmj">${x[1]}</span></button>`:'<span class="gap" aria-hidden="true"></span>';
     const conv=t=>alpha==='k'?kata(t):t;
     function drawChart(){const nm=alpha==='h'?['hiragana','ひらがな']:['katakana','カタカナ'];
       chart.innerHTML=`<div class="kgrp"><h4><span>the basic ${BASIC.filter(Boolean).length}</span><span class="jpm">基本</span></h4><div class="kgrid">${BASIC.map(cell).join('')}</div></div>
@@ -2895,13 +2895,13 @@ body{background-image:none!important;background-color:#FFFFFF}
         const head=`<div class="uhead"><span class="stone">unit ${cur+1} of ${U.length}</span><span class="ut">${u.t}</span></div>`;
         if(!u.s){box.innerHTML=head+`<div class="empty"><span class="k">being written</span><p>grammar: ${u.g}</p></div>`;return}
         if(mode==='v'){const got=u.v.filter(w=>(boxes[w.id]||0)>0).length;
-          box.innerHTML=head+'<div class="fcbox"></div>'+sws(testing,`${got} / ${u.v.length}`,'words')+`<ol class="words">${u.v.map((w,i)=>`<li class="word" data-id="${w.id}"><span class="wl"><span class="wj" lang="ja">${rub(w)}</span><span class="wr rmj">${w.ro}</span></span><span class="wd"><span class="ans">${w.m}${w.ex?`<span class="wex"><span class="kx" lang="ja">${html(w.ex)}</span><span>${w.exe}</span></span>`:''}</span></span><button type="button" class="play" aria-label="play word" data-say="${(w.r||w.d).replace(/[〜…\s]/g,'')}">▶</button><div class="tbtn"><button type="button" data-a="again">again</button><button type="button" class="g" data-a="got">got it</button></div></li>`).join('')}</ol>${mkbox(u.ck)}${kjs().length?`<div class="kblock"><h3 class="kh">kanji in this unit <span class="stone">${kjs().length}</span></h3><div class="kgrid">${kjs().map((k,i)=>`<div class="kcard" data-k="${i}"><span class="kj" lang="ja">${k[0]}</span><div class="kb"><b>${k[1]}</b>${k[2]?`<span class="kr" lang="ja"><i>on</i> ${k[2]}</span>`:''}${k[3]?`<span class="kr" lang="ja"><i>kun</i> ${k[3]}</span>`:''}${k[4].map(x=>`<span class="kw" lang="ja">${html(x[0])} <em>${x[1]}</em></span>`).join('')}</div></div>`).join('')}</div></div>`:''}`;
+          box.innerHTML=head+'<div class="fcbox"></div>'+sws(testing,`${got} / ${u.v.length}`,'words')+`<ol class="words">${u.v.map((w,i)=>`<li class="word" data-id="${w.id}"><span class="wl"><span class="wj" lang="ja">${rub(w)}</span><span class="wr rmj">${w.ro}</span></span><span class="wd"><span class="ans">${w.m}${w.ex?`<span class="wex"><span class="kx" lang="ja">${html(w.ex)}</span><span>${w.exe}</span></span>`:''}</span></span><button type="button" class="play" aria-label="play word" data-say="${(w.r||w.d).replace(/[〜…\s]/g,'')}">▶</button><div class="tbtn"><button type="button" data-a="again">again</button><button type="button" class="g" data-a="got">got it</button></div></li>`).join('')}</ol>${mkbox(u.ck)}${kjs().length?`<div class="kblock"><h3 class="kh">kanji in this unit <span class="stone">${kjs().length}</span></h3><div class="kcgrid">${kjs().map((k,i)=>`<div class="kcard" data-k="${i}"><span class="kj" lang="ja">${k[0]}</span><div class="kb"><b>${k[1]}</b>${k[2]?`<span class="kr" lang="ja"><i>on</i> ${k[2]}</span>`:''}${k[3]?`<span class="kr" lang="ja"><i>kun</i> ${k[3]}</span>`:''}${k[4].map(x=>`<span class="kw" lang="ja">${html(x[0])} <em>${x[1]}</em></span>`).join('')}</div></div>`).join('')}</div></div>`:''}`;
           box.querySelector('.words').onclick=e=>{const li=e.target.closest('.word');if(!li)return;
             const pb=e.target.closest('.play');if(pb){say(pb.dataset.say);return}
             const a=e.target.closest('[data-a]');if(a){mark(li.dataset.id,a.dataset.a);return}
             if(store.get('mj-sent-test',false)&&!li.classList.contains('open')){li.classList.add('open');say(li.querySelector('.play').dataset.say)}};
           {const mt=box.querySelector('.mkt');if(mt)mt.onclick=e=>{const tr=e.target.closest('tbody tr');if(tr&&store.get('mj-sent-test',false))tr.classList.toggle('open')}}
-          const kg=box.querySelector('.kgrid');if(kg)kg.onclick=e=>{const c=e.target.closest('.kcard');if(c&&store.get('mj-sent-test',false))c.classList.toggle('open')}}
+          const kg=box.querySelector('.kcgrid');if(kg)kg.onclick=e=>{const c=e.target.closest('.kcard');if(c&&store.get('mj-sent-test',false))c.classList.toggle('open')}}
         else{const got=u.s.filter((_,i)=>(boxes[`u${cur}:${i}`]||0)>0).length;
           box.innerHTML=head+`<div class="gram">${u.gram.map(g=>`<div><span class="gp" lang="ja">${g[0]}</span><span>${g[1]}<span class="gx stone"><span class="kx" lang="ja">${g[2]}</span></span></span></div>`).join('')}</div>${mkbox(u.mk)}<div class="fcbox"></div>`
             +sws(testing,`${got} / ${u.s.length}`,'sentences')+`<ol class="sents">${u.s.map((x,i)=>`<li class="sent" data-i="${i}">
