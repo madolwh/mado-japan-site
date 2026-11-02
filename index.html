@@ -2059,10 +2059,17 @@ body{background-image:none!important;background-color:#FFFFFF}
     // natural voice for single kana (pre-made clips), device voice as fallback
     let kAud=null;
     function kanaClip(t){const h=t.replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));return /^[ぁ-ゖ]{1,2}$/.test(h)&&t.length<=2?'audio/kana/'+[...h].map(x=>x.charCodeAt(0).toString(16).padStart(4,'0')).join('-')+'.mp3':null}
-    function say(t){const f=kanaClip(t);if(f){try{synth&&synth.cancel();if(kAud)kAud.pause();kAud=new Audio(f);kAud.onerror=()=>say2(t);const pr=kAud.play();if(pr&&pr.catch)pr.catch(()=>say2(t));return}catch(e){}}say2(t)}
+    const fnv=s=>{let h=0x811c9dc5;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,0x01000193)>>>0}return h.toString(16).padStart(8,'0')};
+    const vclip=(v,t)=>{t=t.replace(/\s/g,'');return t?'audio/v/'+v+fnv(v+t)+'.mp3':null};
+    let seqId=0;
+    // play the first clip that exists; if none loads, call miss()
+    function playAny(urls,miss,done){urls=urls.filter(Boolean);const tryNext=()=>{const u=urls.shift();if(!u){miss&&miss();return}try{kAud=new Audio(u);let moved=0;const nx=()=>{if(!moved){moved=1;tryNext()}};kAud.onerror=nx;if(done)kAud.onended=done;const pr=kAud.play();if(pr&&pr.catch)pr.catch(nx)}catch(e){tryNext()}};tryNext()}
+    function stopAll(){seqId++;try{synth&&synth.cancel()}catch(e){}try{kAud&&kAud.pause()}catch(e){}}
+    function say(t){stopAll();playAny([kanaClip(t),vclip('M',t)],()=>say2(t))}
     function say2(t){if(!canSpeak||!synth)return;try{synth.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;u.rate=t.length<=2?.55:.65;synth.speak(u)}catch(e){}}
-    window.__say=say;window.__stop=()=>{try{synth&&synth.cancel()}catch(e){}};
-    window.__sayLines=ls=>{if(!canSpeak||!synth)return;try{synth.cancel();ls.forEach(l=>{const u=new SpeechSynthesisUtterance(l[1].replace(/\s/g,''));u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;u.rate=.72;u.pitch=l[0]==='M'?.7:1.15;synth.speak(u)})}catch(e){}};
+    window.__say=say;window.__stop=stopAll;
+    function line2(l){if(!canSpeak||!synth)return;try{const u=new SpeechSynthesisUtterance(l[1].replace(/\s/g,''));u.lang='ja-JP';if(jaVoice)u.voice=jaVoice;u.rate=.72;u.pitch=l[0]==='M'?.7:1.15;synth.speak(u)}catch(e){}}
+    window.__sayLines=ls=>{stopAll();const id=seqId;let i=0;const next=()=>{if(id!==seqId||i>=ls.length)return;const l=ls[i++];playAny([vclip(l[0]==='M'?'M':'F',l[1])],()=>{if(id===seqId){line2(l);next()}},()=>{if(id===seqId)setTimeout(next,300)})};next()};
 
     // romaji switch, remembered on this device
     function setR(rk,art,on){const a=document.getElementById(art);if(a)a.classList.toggle('no-romaji',!on);document.querySelectorAll(`.rmjsw[data-rk="${rk}"]`).forEach(b=>{b.setAttribute('aria-pressed',on);b.querySelector('b').textContent=on?'on':'off'});store.set(rk,on)}
