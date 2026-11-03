@@ -72,6 +72,7 @@ a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offs
 .grp .gl{font-size:12px;color:var(--stone);border-bottom:1px solid var(--ink);padding-bottom:3px;margin-bottom:2px;display:flex;justify-content:space-between;gap:10px}
 .grp ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
 .grp li{padding-block:3px;white-space:nowrap}
+.grp li.wrap{white-space:normal}.grp li.wrap a{align-items:flex-start}.grp li.wrap .t{min-width:0;line-height:1.15;text-align:right}
 .grp li a{text-decoration:none;display:flex;gap:8px}
 .grp li .n{color:var(--stone);font-variant-numeric:tabular-nums}
 .grp li.on .n{background:var(--ink);color:var(--paper);padding:0 4px}
@@ -872,6 +873,17 @@ body{background-image:none!important;background-color:#FFFFFF}
 .acj{margin:0 0 20px;padding-left:1.4em;max-width:62ch}.acj li{margin:0 0 8px}
 .acgo{display:inline-block;background:var(--ink);color:var(--paper);padding:12px 18px;text-decoration:none;font-weight:600;border:1px solid var(--ink)}
 .acgo:hover{background:var(--lime);color:#000000}
+/* early price timer */
+#early{padding-block:28px;text-align:center}
+#early .ek{font-size:12px;letter-spacing:.08em;margin:0 0 14px}
+#early .ek b{color:#EBFF79}
+.tm{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:760px;margin:0 auto}
+.tm div{border:1px solid rgba(255,255,255,.35);padding:14px 4px 10px}
+.tm b{display:block;font-size:clamp(40px,12vw,96px);line-height:1;font-weight:700;font-variant-numeric:tabular-nums;color:#EBFF79}
+.tm span{display:block;font-size:11px;margin-top:8px;letter-spacing:.08em}
+#early .eg{margin:16px 0 0}
+#early .eg a{display:inline-block;background:#EBFF79;color:#000;padding:12px 18px;text-decoration:none;font-weight:600}
+#early.over .tm,#early.over .eg{display:none}
 #p08 .body p+p{margin-top:12px}
 </style>
 </head>
@@ -907,7 +919,7 @@ body{background-image:none!important;background-color:#FFFFFF}
         <li data-p="p06"><a href="#p06"><span class="n">06</span><span class="t">N2</span></a></li>
         <li data-p="p07"><a href="#p07"><span class="n">07</span><span class="t">N1</span></a></li></ol></div>
       <div class="grp"><div class="gl"><span>lessons</span><span class="jpm">教室</span></div><ol>
-        <li data-p="p08"><a href="#p08"><span class="n">08</span><span class="t">nihongo jouzu crash course</span></a></li></ol></div>
+        <li data-p="p08" class="wrap"><a href="#p08"><span class="n">08</span><span class="t">crash course before <br>your Dec trip to Japan</span></a></li></ol></div>
       <div class="grp"><div class="gl"><span>my journey</span><span class="jpm">道のり</span></div><ol>
         <li data-p="p09"><a href="#p09"><span class="n">09</span><span class="t">my story</span></a></li></ol></div>
     </div>
@@ -1826,6 +1838,11 @@ body{background-image:none!important;background-color:#FFFFFF}
       <p class="h1jp" lang="ja"><span>日本語</span><span>上手ですね！</span></p>
       <p class="lede">the nihongo jouzu crash course, starting 10 Nov. going to Japan this December? in one month, you will be able to survive your Japan travels and get compliments of "nihongo jouzu desu ne!" no alphabets, no writing. just natural, easy Japanese you can speak.</p>
     </div>
+    <section class="ink" id="early" aria-label="early price countdown">
+      <p class="ek">early price <b>$160</b> ends Fri 6 Nov, 11:59pm. then $180.</p>
+      <div class="tm" role="timer" aria-live="off"><div><b data-u="d">00</b><span>days</span></div><div><b data-u="h">00</b><span>hours</span></div><div><b data-u="m">00</b><span>minutes</span></div><div><b data-u="s">00</b><span>seconds</span></div></div>
+      <p class="eg"><a href="https://ig.me/m/mado_japan">dm mado</a></p>
+    </section>
     <section>
       <div class="sh"><span class="no">08.1</span><h2>the course</h2><span class="jpm">コース</span></div>
       <div class="body">
@@ -1968,6 +1985,28 @@ body{background-image:none!important;background-color:#FFFFFF}
   document.querySelectorAll('.js-today').forEach(e=>e.textContent=today);
   document.querySelectorAll('.js-days').forEach(e=>e.textContent=after?'exam day has passed':shownLeft);
 
+
+  // early price timer, ends end of Fri 6 Nov 2026, Singapore time
+  (function(){
+    const box=document.getElementById('early');if(!box)return;
+    const END=Date.parse('2026-11-06T23:59:59+08:00');
+    const q=u=>box.querySelector('[data-u='+u+']'),p2=n=>String(n).padStart(2,'0');
+    let t;
+    function over(){
+      box.classList.add('over');
+      box.querySelector('.ek').innerHTML='the early price has ended. now <b>$180</b> for all 4 lessons.';
+      const pr=document.querySelector('#p08 .pr');
+      if(pr){pr.querySelector('b').textContent='$180 for all 4 lessons';pr.querySelector('span').innerHTML='6 hours, either level.<br>bring a friend: $170 each.<br>materials made by me are included, and there is no registration fee.'}
+    }
+    function tick(){
+      const ms=END-Date.now();
+      if(ms<=0){over();clearInterval(t);return}
+      const s=Math.floor(ms/1000);
+      q('d').textContent=p2(Math.floor(s/86400));q('h').textContent=p2(Math.floor(s%86400/3600));
+      q('m').textContent=p2(Math.floor(s%3600/60));q('s').textContent=p2(s%60);
+    }
+    tick();t=setInterval(tick,1000);
+  })();
   // levels: one template, five pages
   const LV=[
     ['N5','beginner','初級','the first step: kana, first words, first sentences'],
