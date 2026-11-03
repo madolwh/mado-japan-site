@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@600&family=JetBrains+Mono:wght@400&family=Noto+Sans+JP:wght@500&family=M+PLUS+1+Code:wght@400&display=swap">
 <style>
-/* layout: the rulebook's archive-file look, turned outward. ink header, index of 8 pages, with lessons and brands at the bottom of every page, one page shown at a time, paper and ink sections. single committed light theme */
+/* layout: the rulebook's archive-file look, turned outward. ink header, index of 9 pages, with lessons and brands at the bottom of every page, one page shown at a time, paper and ink sections. single committed light theme */
 :root{
   color-scheme: light;
   --paper:#FFFFFF; --ink:#000000; --stone:#6B6B66; --lime:#EBFF79; --red:#E8472B;
@@ -839,6 +839,39 @@ body{background-image:none!important;background-color:#FFFFFF}
   html{scroll-padding-top:16px}
 }
 @media (max-width:959px) and (prefers-reduced-motion:reduce){.index,#menuBtn span,#scrim{transition:none}}
+.aclv{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 22px}
+.acc{border:1px solid var(--ink);padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px}
+.acc p{margin:0}
+.acch{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--ink);padding-bottom:8px}
+.acn{font-size:44px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.acw{font-weight:600}
+.acf{margin-top:auto!important;padding-top:8px;border-top:1px dashed rgba(0,0,0,.25);font-size:.92em}
+.acf span{display:block;color:var(--stone);font-size:.85em;margin-bottom:2px}
+.acfx{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+.acfx div{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.acfx b{font-size:22px;letter-spacing:-.02em;line-height:1.1}
+.acfx span{color:var(--stone);font-size:.88em}
+.acfx .hi{background:var(--lime)}.acfx .pr{grid-column:1/-1}.acfx .pr b{font-size:26px}.acfx .hi span{color:#000000}
+@media (max-width:720px){
+.aclv{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-left:1px solid var(--ink);margin:14px 0 16px}
+.acc{display:grid;grid-row:span 4;grid-template-rows:subgrid;gap:0;padding:0;border-left:0}
+.acc>*{padding:7px 8px}
+.acc>*+*{border-top:1px solid rgba(0,0,0,.15)}
+.acch{flex-direction:column;align-items:flex-start;gap:2px;border-bottom:0;padding-bottom:7px}
+.acn{font-size:26px}
+.acc p{font-size:12px;line-height:1.45}
+.acw{font-size:12.5px}
+.acf{margin-top:0!important;border-top:1px solid rgba(0,0,0,.15)!important;padding-top:7px;font-size:12px}
+.acfx{grid-template-columns:repeat(3,minmax(0,1fr))}
+.acfx div{padding:8px;gap:2px}
+.acfx b{font-size:15px}.acfx .pr b{font-size:20px}
+.acfx span{font-size:11px;line-height:1.35}
+}
+/* 09 academy */
+.acj{margin:0 0 20px;padding-left:1.4em;max-width:62ch}.acj li{margin:0 0 8px}
+.acgo{display:inline-block;background:var(--ink);color:var(--paper);padding:12px 18px;text-decoration:none;font-weight:600;border:1px solid var(--ink)}
+.acgo:hover{background:var(--lime);color:#000000}
+#p09 .body p+p{margin-top:12px}
 </style>
 </head>
 <body>
@@ -874,6 +907,8 @@ body{background-image:none!important;background-color:#FFFFFF}
         <li data-p="p07"><a href="#p07"><span class="n">07</span><span class="t">N1</span></a></li></ol></div>
       <div class="grp"><div class="gl"><span>my journey</span><span class="jpm">道のり</span></div><ol>
         <li data-p="p08"><a href="#p08"><span class="n">08</span><span class="t">my story</span></a></li></ol></div>
+      <div class="grp"><div class="gl"><span>lessons</span><span class="jpm">教室</span></div><ol>
+        <li data-p="p09"><a href="#p09"><span class="n">09</span><span class="t">mado japan academy</span></a></li></ol></div>
     </div>
   </nav>
 
@@ -883,7 +918,7 @@ body{background-image:none!important;background-color:#FFFFFF}
   <article class="page" id="p01">
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">入口</span>
-      <div class="eyebrow"><span>[01] page 01 of 8</span><span>start / <span class="jpm">入口</span></span></div>
+      <div class="eyebrow"><span>[01] page 01 of 9</span><span>start / <span class="jpm">入口</span></span></div>
       <h1 class="hook">can I get into <mark class="hl">Japan's</mark> top design university<span class="cur" aria-hidden="true">_</span></h1>
       <p class="h1jp" lang="ja"><span>日本トップの</span><span>デザイン大学に</span><span>入れるかな</span></p>
       <p class="lede">I'm Mado, 22, from Singapore. I'm trying to get into Tama Art University, and I'm learning Japanese in public on the way. the exam is on 2026.12.17, and nobody knows how it ends yet, including me.</p>
@@ -939,7 +974,7 @@ body{background-image:none!important;background-color:#FFFFFF}
   <article class="page" id="p02" hidden>
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">学ぶ</span>
-      <div class="eyebrow"><span>[02] page 02 of 8</span><span>learn / <span class="jpm">学ぶ</span></span></div>
+      <div class="eyebrow"><span>[02] page 02 of 9</span><span>learn / <span class="jpm">学ぶ</span></span></div>
       <h1>how to learn <span class="hl">Japanese</span><span class="cur" aria-hidden="true">_</span></h1>
       <p class="lede">the question I get asked the most. I'm answering it once, properly, here.</p>
     </div>
@@ -979,7 +1014,7 @@ body{background-image:none!important;background-color:#FFFFFF}
   <article class="page" id="p03" hidden data-prev="#p02|[02] how to learn Japanese" data-next="#p04|[04] N4">
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">初級</span>
-      <div class="eyebrow"><span>[03] page 03 of 8</span><span>learn / <span class="jpm">学ぶ</span></span></div>
+      <div class="eyebrow"><span>[03] page 03 of 9</span><span>learn / <span class="jpm">学ぶ</span></span></div>
       <h1>N5<span class="cur" aria-hidden="true">_</span></h1>
       <p class="lede">from knowing nothing to passing N5. everything is here, in the order to do it, at your own pace.</p>
     </div>
@@ -1207,7 +1242,7 @@ body{background-image:none!important;background-color:#FFFFFF}
   <article class="page no-romaji" id="p04" hidden data-prev="#n5-ready|[03] N5" data-next="#p05|[05] N3">
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">初級</span>
-      <div class="eyebrow"><span>[04] page 04 of 8</span><span>learn / <span class="jpm">学ぶ</span></span></div>
+      <div class="eyebrow"><span>[04] page 04 of 9</span><span>learn / <span class="jpm">学ぶ</span></span></div>
       <h1>N4<span class="cur" aria-hidden="true">_</span></h1>
       <p class="lede">after N5. plain forms, casual Japanese, and the grammar for everyday conversations.</p>
     </div>
@@ -1350,7 +1385,7 @@ body{background-image:none!important;background-color:#FFFFFF}
   <article class="page no-romaji" id="p05" hidden data-prev="#n4-ready|[04] N4" data-next="#p06|[06] N2">
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">中級</span>
-      <div class="eyebrow"><span>[05] page 05 of 8</span><span>learn / <span class="jpm">学ぶ</span></span></div>
+      <div class="eyebrow"><span>[05] page 05 of 9</span><span>learn / <span class="jpm">学ぶ</span></span></div>
       <h1>N3<span class="cur" aria-hidden="true">_</span></h1>
       <p class="lede">the bridge between textbook Japanese and real Japanese. the first level where you read the news, follow work talk, and say what you think.</p>
     </div>
@@ -1495,7 +1530,7 @@ body{background-image:none!important;background-color:#FFFFFF}
   <article class="page no-romaji" id="p06" hidden data-prev="#n3-ready|[05] N3" data-next="#p07|[07] N1">
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">中上級</span>
-      <div class="eyebrow"><span>[06] page 06 of 8</span><span>learn / <span class="jpm">学ぶ</span></span></div>
+      <div class="eyebrow"><span>[06] page 06 of 9</span><span>learn / <span class="jpm">学ぶ</span></span></div>
       <h1>N2<span class="cur" aria-hidden="true">_</span></h1>
       <p class="lede">the level many jobs and universities in Japan ask for. the news, work, and the Japanese people actually use every day.</p>
     </div>
@@ -1639,7 +1674,7 @@ body{background-image:none!important;background-color:#FFFFFF}
   <article class="page no-romaji" id="p07" hidden data-prev="#n2-ready|[06] N2" data-next="#p08|[08] my story">
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">上級</span>
-      <div class="eyebrow"><span>[07] page 07 of 8</span><span>learn / <span class="jpm">学ぶ</span></span></div>
+      <div class="eyebrow"><span>[07] page 07 of 9</span><span>learn / <span class="jpm">学ぶ</span></span></div>
       <h1>N1<span class="cur" aria-hidden="true">_</span></h1>
       <p class="lede">the highest level. newspapers, essays, lectures, and Japanese at its most formal.</p>
     </div>
@@ -1784,7 +1819,7 @@ body{background-image:none!important;background-color:#FFFFFF}
   <article class="page" id="p08" hidden>
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">原点</span>
-      <div class="eyebrow"><span>[08] page 08 of 8</span><span>journey / <span class="jpm">道のり</span></span></div>
+      <div class="eyebrow"><span>[08] page 08 of 9</span><span>journey / <span class="jpm">道のり</span></span></div>
       <h1>my story<span class="cur" aria-hidden="true">_</span></h1>
       <p class="lede">why a Singaporean designer is trying to study in Japan, and where I am on the way.</p>
     </div>
@@ -1820,7 +1855,72 @@ body{background-image:none!important;background-color:#FFFFFF}
         </figure>
       </div>
     </section>
-    <div class="next"><span>previous: <a href="#p07">[07] N1</a></span><span>back to: <a href="#p01">[01] start here ></a></span></div>
+    <div class="next"><span>previous: <a href="#p07">[07] N1</a></span><span>next page: <a href="#p09">[09] mado japan academy ></a></span></div>
+  </article>
+
+  <!-- 09 academy -->
+  <article class="page" id="p09" hidden>
+    <div class="pagehead">
+      <span class="bigjp" aria-hidden="true">教室</span>
+      <div class="eyebrow"><span>[09] page 09 of 9</span><span>lessons / <span class="jpm">教室</span></span></div>
+      <h1>mado japan academy<span class="cur" aria-hidden="true">_</span></h1>
+      <p class="lede">small group Japanese classes in Bishan, from N5 to N3. learn with me in person, with materials I make myself.</p>
+    </div>
+    <section>
+      <div class="sh"><span class="no">09.1</span><h2>the classes</h2><span class="jpm">クラス</span></div>
+      <div class="body">
+        <p>each level is its own class. pick the one that fits you, or we find it together in the level check.</p>
+        <div class="aclv">
+          <div class="acc">
+            <div class="acch"><span class="acn">N5</span><span class="jpm">初級</span></div>
+            <p class="acw">start from zero</p>
+            <p>kana, first words, introducing yourself, simple everyday sentences.</p>
+            <p class="acf"><span>for you if</span>you're new, or you only know some kana.</p>
+          </div>
+          <div class="acc">
+            <div class="acch"><span class="acn">N4</span><span class="jpm">初級</span></div>
+            <p class="acw">everyday Japanese</p>
+            <p>plain forms, casual speech, talking about your plans and what you've done.</p>
+            <p class="acf"><span>for you if</span>you know the N5 basics and want to use them.</p>
+          </div>
+          <div class="acc">
+            <div class="acch"><span class="acn">N3</span><span class="jpm">中級</span></div>
+            <p class="acw">the bridge to real Japanese</p>
+            <p>natural conversation, short real texts, and the small words that change the meaning.</p>
+            <p class="acf"><span>for you if</span>you're at N4 and want to sound natural.</p>
+          </div>
+        </div>
+        <div class="acfx" aria-label="how the classes work">
+          <div><b>3 to 6</b><span>people per group, all at one level</span></div>
+          <div><b>once a week</b><span>one lesson every week</span></div>
+          <div><b>90 min</b><span>each lesson</span></div>
+          <div><b>8 weeks</b><span>one term, 12 hours in total</span></div>
+          <div><b>Bishan</b><span>classes are held in person</span></div>
+          <div><b>when</b><span>depends on availability, usually weeknights or Saturday mornings</span></div>
+          <div class="hi pr"><b>$280 per term</b><span>early bird price for all 8 lessons (12 hours). $320 after the sign-up deadline. materials made by me are included, and there is no registration fee.</span></div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="sh"><span class="no">09.2</span><h2>why small groups</h2><span class="jpm">少人数</span></div>
+      <div class="body">
+        <p>big language schools often put 7 to 16 people in one room. with 3 to 6, you speak in every class, and I know where each of you gets stuck.</p>
+        <p>everyone in your group is at your level. before you join, we do a free 15-minute call to check where you are.</p>
+      </div>
+    </section>
+    <section>
+      <div class="sh"><span class="no">09.3</span><h2>how to join</h2><span class="jpm">申し込み</span></div>
+      <div class="body">
+        <ol class="acj">
+          <li>message me on Instagram and tell me your level</li>
+          <li>we do a free 15-minute level check</li>
+          <li>I place you in a group. pay before the deadline for the early bird price</li>
+          <li>classes are held in Bishan</li>
+        </ol>
+        <p><a class="acgo" href="https://ig.me/m/mado_japan" target="_blank" rel="noopener">message me ></a></p>
+      </div>
+    </section>
+    <div class="next"><span>previous: <a href="#p08">[08] my story</a></span><span>back to: <a href="#p01">[01] start here ></a></span></div>
   </article>
 
   </main>
@@ -1831,7 +1931,7 @@ body{background-image:none!important;background-color:#FFFFFF}
     <div class="ftop"><span>contact / <span class="jpm">連絡</span></span><span class="js-tag">[Tama.068]</span></div>
     <h2 class="fh2">contact me<span class="cur lt" aria-hidden="true">_</span></h2>
     <div class="crows">
-      <a class="crow" href="https://ig.me/m/mado_japan" target="_blank" rel="noopener"><span class="cl">for private lessons</span><span class="cn">Japanese lessons with me</span><span class="ca">message me ></span></a>
+      <a class="crow" href="https://ig.me/m/mado_japan" target="_blank" rel="noopener"><span class="cl">for group lessons</span><span class="cn">mado japan academy, small groups in Bishan</span><span class="ca">message me ></span></a>
       <a class="crow" href="mailto:madojapan.daily@gmail.com?subject=brand%20work"><span class="cl">for brand work</span><span class="cn">work with me on your brand. madojapan.daily@gmail.com</span><span class="ca">email me ></span></a>
     </div>
     <div class="fbot"><span class="wm">mado<span class="us cur">_</span>japan</span><small>my public journey</small></div>
@@ -1870,7 +1970,7 @@ body{background-image:none!important;background-color:#FFFFFF}
     return `<article class="page" id="p${n}" hidden>
     <div class="pagehead">
       <span class="bigjp" aria-hidden="true">${l[2]}</span>
-      <div class="eyebrow"><span>[${n}] page ${n} of 8</span><span>learn / <span class="jpm">学ぶ</span></span></div>
+      <div class="eyebrow"><span>[${n}] page ${n} of 9</span><span>learn / <span class="jpm">学ぶ</span></span></div>
       <h1>${l[0]}<span class="cur" aria-hidden="true">_</span></h1>
       <p class="lede">${l[1]} · <span class="jpm">${l[2]}</span>. ${l[3]}.</p>
     </div>
